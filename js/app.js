@@ -333,6 +333,21 @@
     b.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
   });
 
+  /* En pantallas chicas las categorías no entran: flechas para correrlas */
+  const chipsWrap = $('#chipsWrap');
+  function updateChipArrows() {
+    const max = chips.scrollWidth - chips.clientWidth;
+    chipsWrap.classList.toggle('can-prev', chips.scrollLeft > 4);
+    chipsWrap.classList.toggle('can-next', chips.scrollLeft < max - 4);
+  }
+  chips.addEventListener('scroll', updateChipArrows, { passive: true });
+  if ('ResizeObserver' in window) new ResizeObserver(updateChipArrows).observe(chips);
+  else window.addEventListener('resize', updateChipArrows);
+  $$('.chips__arrow', chipsWrap).forEach(b => b.addEventListener('click', () => {
+    const dir = b.classList.contains('chips__arrow--next') ? 1 : -1;
+    chips.scrollBy({ left: dir * chips.clientWidth * .7, behavior: reduced ? 'auto' : 'smooth' });
+  }));
+
   let searchTimer;
   search.addEventListener('input', () => {
     clearTimeout(searchTimer);
