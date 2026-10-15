@@ -28,7 +28,7 @@
   const zoomAttr = (p, factor = 1) => p.zoom ? ` style="--z:${(p.zoom * factor).toFixed(2)}"` : '';
   const sizeOk = (id, t) => !!byId[id] && byId[id].tamanos.some(s => s.t === t);
   const priceOf = (id, t) => { const s = byId[id] && byId[id].tamanos.find(x => x.t === t); return s ? s.precio : null; };
-  const hasPrices = D.productos.some(p => p.tamanos.some(s => isNum(s.precio)));
+  let hasPrices = false;
 
   const store = {
     get(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } },
@@ -841,8 +841,47 @@
     $$('.ticker, main > section, main > .band, .foot').forEach(el => pauser.observe(el));
   }
 
+  /* ─── Precios base ───────────────────────────────────────────────
+     Son los del panel de Do-aSol (admin.html → Precios Base). Se
+     muestran al instante los últimos conocidos y se actualizan apenas
+     responde Firebase. */
+  const PRICES_KEY = 'donasol.precios.v1';
+
+  function setPrices(map) {
+    if (!map || typeof map !== 'object') return;
+    D.productos.forEach(p => p.tamanos.forEach(s => {
+      s.precio = isNum(map[s.clave]) ? map[s.clave] : null;
+    }));
+    hasPrices = D.productos.some(p => p.tamanos.some(s => isNum(s.precio)));
+  }
+
+  function fetchPrices() {
+    const fb = D.firebase;
+    if (!fb || !window.fetch) return;
+    const url = `https://firestore.googleapis.com/v1/projects/${fb.proyecto}/databases/(default)/documents/precios/base?key=${fb.apiKey}`;
+    fetch(url)
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(doc => {
+        const map = {};
+        Object.entries(doc.fields || {}).forEach(([k, f]) => {
+          const v = Number('integerValue' in f ? f.integerValue : f.doubleValue);
+          if (isFinite(v)) map[k] = v;
+        });
+        const had = hasPrices;
+        setPrices(map);
+        store.set(PRICES_KEY, map);
+        if (hasPrices !== had) renderGrid(); else syncCards();
+        if (quick.open) renderQuick(false);
+        renderCart();
+        renderPhone();
+      })
+      .catch(err => console.warn('Doña Sol · precios:', err.message));
+  }
+
   /* ─── Inicio ─────────────────────────────────────────────────── */
+  setPrices(store.get(PRICES_KEY, null));
   renderChips();
   renderGrid();
   onCartChange();
+  fetchPrices();
 })();
