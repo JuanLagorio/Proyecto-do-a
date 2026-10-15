@@ -3,7 +3,11 @@
     "allow": [
       "mcp__claude-in-chrome__tabs_context_mcp",
       "ClaudeInChromeDomain(127.0.0.1:5174)",
-      "ClaudeInChromeDomain(127.0.0.1:5175)"
+      "ClaudeInChromeDomain(127.0.0.1:5175)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "ClaudeInChromeDomain(juanlagorio.github.io)"
     ]
   }
 }
