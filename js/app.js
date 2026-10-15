@@ -50,6 +50,86 @@
   });
   $$('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 
+  /* ─── Páginas ────────────────────────────────────────────────────
+     Cada sección del menú es una página propia: se muestra una por vez
+     según el #ancla de la dirección, y el botón Atrás del navegador
+     vuelve a la anterior. */
+  const main = $('main');
+  const pages = $$('main > [data-page]');
+  const pageLinks = $$('.nav__links a, .menu__links a');
+  const BASE_TITLE = document.title;
+  let page = null;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  function resolve(hash) {
+    let el = null;
+    try { if (hash && hash.length > 1) el = document.getElementById(decodeURIComponent(hash.slice(1))); } catch (e) { /* ancla inválida */ }
+    const host = el && el.closest('main > [data-page]');
+    return host ? { name: host.dataset.page, el } : { name: page || 'inicio', el: null };
+  }
+
+  function showPage(hash, y) {
+    const { name, el } = resolve(hash);
+    const first = pages.find(s => s.dataset.page === name);
+    const changed = name !== page;
+    if (changed) {
+      const initial = page === null;
+      page = name;
+      pages.forEach(s => { s.hidden = s.dataset.page !== name; });
+      document.body.dataset.page = name;
+      const titled = pages.find(s => s.dataset.page === name && s.dataset.title);
+      document.title = titled ? `${titled.dataset.title} · Doña Sol` : BASE_TITLE;
+      pageLinks.forEach(a => {
+        if (resolve(a.getAttribute('href')).name === name) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
+      if (!initial && !reduced) {
+        main.classList.remove('page-in');
+        void main.offsetWidth;
+        main.classList.add('page-in');
+      }
+    }
+    const behavior = changed || reduced ? 'auto' : 'smooth';
+    if (isNum(y)) window.scrollTo(0, y);
+    else if (el && el !== first) el.scrollIntoView({ behavior });
+    else window.scrollTo({ top: 0, behavior });
+    return changed;
+  }
+
+  function navigate(hash) {
+    if (hash !== location.hash) {
+      history.replaceState({ y: window.scrollY }, '');
+      history.pushState(null, '', hash);
+    }
+    if (!showPage(hash)) return;
+    // Lectores de pantalla: llevar el foco al título de la página nueva
+    const target = resolve(hash).el || pages.find(s => s.dataset.page === page);
+    const title = target && $('h1, h2', target);
+    if (title) {
+      title.setAttribute('tabindex', '-1');
+      title.focus({ preventScroll: true });
+    }
+  }
+
+  window.addEventListener('hashchange', () => {
+    const st = history.state;
+    showPage(location.hash, st && isNum(st.y) ? st.y : undefined);
+  });
+
+  document.addEventListener('click', e => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.target || a.getAttribute('href').length < 2) return;
+    e.preventDefault();
+    navigate(a.getAttribute('href'));
+  });
+
+  $$('[data-top]').forEach(b => b.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  }));
+
+  showPage(location.hash);
+
   /* ─── Diálogos ───────────────────────────────────────────────── */
   function openDialog(d) {
     if (!d.open) d.showModal();
@@ -73,11 +153,6 @@
       timer = setTimeout(done, 450);
     });
   }
-  function goTo(hash) {
-    const target = hash && hash.length > 1 ? document.querySelector(hash) : null;
-    if (target) target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
-  }
-
   $$('dialog').forEach(d => {
     d.addEventListener('cancel', e => { e.preventDefault(); closeDialog(d); });
     d.addEventListener('click', e => {
@@ -92,7 +167,7 @@
       const href = el.getAttribute('href');
       if (href && href.startsWith('#')) {
         e.preventDefault();
-        closeDialog(d).then(() => goTo(href));
+        closeDialog(d).then(() => navigate(href));
       } else {
         closeDialog(d);
       }
@@ -108,17 +183,6 @@
 
   $('#menuOpen').addEventListener('click', () => openDialog(menu));
   $$('.menu__links a').forEach((a, i) => a.style.setProperty('--i', i));
-
-  if ('IntersectionObserver' in window) {
-    const links = $$('.nav__links a');
-    const spy = new IntersectionObserver(entries => {
-      entries.forEach(en => {
-        if (!en.isIntersecting) return;
-        links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + en.target.id));
-      });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    links.forEach(a => { const s = $(a.getAttribute('href')); if (s) spy.observe(s); });
-  }
 
   /* ─── Carrito: estado ────────────────────────────────────────── */
   const CART_KEY = 'donasol.pedido.v1';
@@ -161,7 +225,7 @@
   const chips = $('#chips');
   const search = $('#search');
   const resultCount = $('#resultCount');
-  const empty = $('#empty');
+  const askWa = $('#askWa');
   let active = new Set(CATS);
   let query = '';
   const selSize = {};
@@ -242,18 +306,16 @@
     const words = norm(query.trim()).split(/\s+/).filter(Boolean);
     const list = D.productos.filter(p => active.has(p.cat) && words.every(w => p._s.includes(w)));
     grid.innerHTML = list.map(cardHTML).join('');
-    empty.hidden = list.length > 0;
-    grid.hidden = list.length === 0;
 
+    const q = query.trim();
     let txt = plural(list.length, 'producto', 'productos');
-    if (query.trim()) txt += ` para “${query.trim()}”`;
+    if (q) txt += ` para “${q}”`;
     if (!isAll()) txt += ` en ${Array.from(active).map(c => D.categorias[c]).join(', ')}`;
     resultCount.textContent = txt;
 
-    if (!list.length) {
-      $('#emptyQuery').textContent = query.trim() || 'esta categoría';
-      $('#emptyWa').href = waUrl(`¡Hola, Doña Sol! ¿Tienen ${query.trim() || 'productos de esta categoría'}?`);
-    }
+    askWa.href = waUrl(q
+      ? `¡Hola, Doña Sol! ¿Tienen ${q}?`
+      : '¡Hola, Doña Sol! Estoy buscando un producto que no encontré en la web.');
   }
 
   function setFilter(cats) {
@@ -710,7 +772,7 @@
     orderCode = newCode();
     sent = false;
     onCartChange();
-    closeDialog(drawer).then(() => goTo('#tienda'));
+    closeDialog(drawer).then(() => navigate('#tienda'));
   });
   $('#sentBack').addEventListener('click', () => { sent = false; renderCart(); });
 
