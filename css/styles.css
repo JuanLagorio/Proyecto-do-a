@@ -304,17 +304,22 @@ main.page-in { animation: pageIn .45s var(--ease); }
   position: relative; z-index: 1;
   width: 66%; aspect-ratio: 1; border-radius: 50%;
   overflow: hidden;
-  background: radial-gradient(circle at 46% 40%, #FFFEF9 0%, #FFF7E4 55%, #FDEBC4 100%);
+  /* Mismo blanco que el fondo de las fotos: así no hace falta mezclarlas
+     (algunos celulares no mezclan mientras la foto se mueve y se veía
+     el recuadro). */
+  background: #FFFEFE;
   border: clamp(8px, 1.1vw, 14px) solid var(--sun);
   box-shadow:
     0 0 0 clamp(5px, .7vw, 9px) var(--orange),
-    0 40px 70px -24px rgb(60 0 0 / .65),
-    inset 0 -30px 50px -20px rgb(247 129 30 / .25);
+    0 40px 70px -24px rgb(60 0 0 / .65);
+}
+.porthole::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  box-shadow: inset 0 -30px 50px -20px rgb(247 129 30 / .25);
 }
 .porthole img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: contain;
-  mix-blend-mode: multiply;
   filter: brightness(1.03) contrast(1.05);
   opacity: 0;
   transform: translateY(18%) scale(calc(var(--z, 1.3) * .86)) rotate(-8deg);
