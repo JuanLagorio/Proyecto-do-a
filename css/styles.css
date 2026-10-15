@@ -689,6 +689,8 @@ main { overflow-x: clip; }
 .stamp b { font-family: var(--f-display); font-weight: 900; font-stretch: 115%; font-size: 1.35rem; line-height: 1; letter-spacing: -.02em; }
 .why__hand { position: absolute; z-index: 2; left: 4%; top: -46px; color: var(--red-deep); font-size: 1.9rem; rotate: -6deg; }
 
+.why__lead { max-width: 38rem; margin-top: 24px; font-size: clamp(1.05rem, 1rem + .25vw, 1.18rem); color: var(--ink-2); }
+.why__lead b { color: var(--ink); }
 .reasons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 36px; margin-top: 40px; }
 .reasons li { display: grid; align-content: start; gap: 10px; padding-top: 18px; border-top: 2.5px solid var(--ink); }
 .reasons__n { font-family: var(--f-display); font-weight: 900; font-stretch: 120%; font-size: 2.6rem; line-height: .9; color: var(--red); letter-spacing: -.04em; }
