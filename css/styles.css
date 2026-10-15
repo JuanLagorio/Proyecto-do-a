@@ -702,6 +702,19 @@ main { overflow-x: clip; }
 .reasons h3 { font-family: var(--f-display); font-weight: 820; font-stretch: 106%; font-size: 1.3rem; letter-spacing: -.02em; margin-bottom: 6px; }
 .reasons p { color: var(--ink-2); font-size: .98rem; }
 
+/* ─── Clientes ─────────────────────────────────────────────────── */
+/* Los logos vienen recortados y centrados sobre blanco, todos de 600x400 */
+.clients { background: var(--cream); }
+.clients__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.clients__grid li {
+  background: #fff; border-radius: 24px; overflow: hidden;
+  border: 1.5px solid var(--line);
+  box-shadow: 0 22px 36px -30px rgb(90 30 10 / .55);
+}
+.clients__grid li:hover { transform: translateY(-4px) rotate(-.6deg); box-shadow: 0 28px 40px -28px rgb(90 30 10 / .6); }
+.clients__grid img { width: 100%; aspect-ratio: 3 / 2; }
+.clients__thanks { margin-top: 30px; text-align: center; color: var(--red-deep); font-size: 2rem; rotate: -2deg; }
+
 /* ─── Cómo pedir ───────────────────────────────────────────────── */
 .how { background: var(--paper); }
 .how__grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(40px, 6vw, 96px); align-items: center; }
@@ -1114,6 +1127,7 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .kits__grid { grid-template-columns: 1fr; max-width: 560px; }
   .why__grid, .how__grid, .faq__grid, .contact__grid { grid-template-columns: 1fr; }
   .why__media { max-width: 520px; }
+  .clients__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   .faq__head { position: static; }
   .how__phone { order: -1; padding-top: 52px; }
   .how__hand { left: 0; top: 4px; font-size: 1.6rem; rotate: -4deg; }
@@ -1167,6 +1181,9 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .reasons { grid-template-columns: 1fr; gap: 26px; }
   .stamp { width: 112px; height: 112px; right: -4px; }
   .stamp b { font-size: 1.1rem; }
+  .clients__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .clients__grid li { border-radius: 18px; }
+  .clients__thanks { font-size: 1.7rem; }
   .faq__list details p { padding-right: 0; }
 
   .float-cart { left: 16px; right: 16px; bottom: calc(14px + env(safe-area-inset-bottom)); }
