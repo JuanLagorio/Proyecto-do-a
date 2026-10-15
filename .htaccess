@@ -1,0 +1,5 @@
+# En Hostinger: que no se puedan abrir los archivos de trabajo del repositorio
+# (.claude, .gitattributes, fotos originales). .well-known queda libre para el SSL.
+RewriteEngine On
+RewriteRule ^\.well-known/ - [L]
+RewriteRule ^(\.|Algunos\sClientes/|Pagina\sDo) - [F]
