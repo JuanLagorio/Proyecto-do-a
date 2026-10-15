@@ -476,26 +476,8 @@ main { overflow-x: clip; }
   box-shadow: 0 14px 30px -24px rgb(90 30 10 / .45);
   margin-bottom: 14px;
 }
-.chips-wrap { position: relative; min-width: 0; }
-.chips { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; min-width: 0; scroll-padding-inline: 40px; }
+.chips { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; min-width: 0; }
 .chips::-webkit-scrollbar { display: none; }
-/* Cuando hay más categorías de las que entran: borde desvanecido y flecha */
-.chips-wrap.can-next .chips { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 72px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 72px), transparent); }
-.chips-wrap.can-prev .chips { -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 72px), transparent); mask-image: linear-gradient(to left, #000 calc(100% - 72px), transparent); }
-.chips-wrap.can-prev.can-next .chips { -webkit-mask-image: linear-gradient(to right, transparent, #000 72px, #000 calc(100% - 72px), transparent); mask-image: linear-gradient(to right, transparent, #000 72px, #000 calc(100% - 72px), transparent); }
-.chips__arrow {
-  position: absolute; z-index: 1; top: 50%; translate: 0 -50%;
-  display: none; place-items: center; width: 34px; height: 34px; padding: 0;
-  border: 1.5px solid var(--line); border-radius: 50%;
-  background: #fff; color: var(--ink); cursor: pointer;
-  box-shadow: 0 4px 12px -4px rgb(90 30 10 / .4);
-}
-.chips__arrow .ico { width: 16px; height: 16px; }
-.chips__arrow--prev { left: 0; }
-.chips__arrow--prev .ico { rotate: 180deg; }
-.chips__arrow--next { right: 0; }
-.chips__arrow--next .ico { animation: nudge 1s ease-in-out .6s 3; }
-.chips-wrap.can-prev .chips__arrow--prev, .chips-wrap.can-next .chips__arrow--next { display: grid; }
 .chip {
   flex: none; display: inline-flex; align-items: center; gap: 7px;
   padding: .66em 1.05em; border: 0; border-radius: 999px;
@@ -1082,7 +1064,6 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
 @keyframes tagIn { from { opacity: .2; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pageIn { from { opacity: 0; transform: translateY(14px); } }
-@keyframes nudge { 50% { transform: translateX(4px); } }
 @keyframes fadeDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 @keyframes drawerIn { from { transform: translateX(100%); } to { transform: none; } }
 @keyframes drawerOut { to { transform: translateX(100%); } }
@@ -1159,6 +1140,10 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .hero__note svg { width: 40px; height: 30px; margin-left: 40px; }
 
   .shop__bar { flex-direction: column-reverse; align-items: stretch; border-radius: 22px; padding: 6px; top: calc(var(--nav-h) + 6px); }
+  /* En el celular todas las categorías a la vista, sin deslizar */
+  .chips { flex-wrap: wrap; overflow: visible; gap: 5px; padding: 2px; }
+  .chip { flex: 1 1 auto; justify-content: center; padding: .62em .7em; font-size: .8rem; background: var(--cream); }
+  .chip small { display: none; }
   .search { flex: none; }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .card { border-radius: 20px; }
