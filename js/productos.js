@@ -204,6 +204,12 @@ window.DONASOL = {
       tamanos: [{ t: '6 u.', clave: 'franelas' }]
     },
     {
+      id: 'microfibras', cat: 'textil', nombre: 'Microfibras',
+      img: 'img/productos/microfibras.jpg',
+      desc: 'Paños de microfibra. Atrapan el polvo y secan sin dejar pelusa ni marcas.',
+      tamanos: [{ t: '5 u.', clave: 'microfibras' }]
+    },
+    {
       id: 'guantes-negros', cat: 'textil', nombre: 'Guantes de Látex Negros',
       img: 'img/productos/guantes-negros.jpg', cover: true,
       desc: 'Ultra resistentes, para tareas pesadas. Excelente agarre en seco y mojado. Para industria, mantenimiento y construcción.',
