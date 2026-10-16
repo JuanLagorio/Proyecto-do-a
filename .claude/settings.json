@@ -7,7 +7,11 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git push *)",
-      "ClaudeInChromeDomain(juanlagorio.github.io)"
+      "ClaudeInChromeDomain(juanlagorio.github.io)",
+      "ClaudeInChromeDomain(localhost:8765)",
+      "ClaudeInChromeDomain(hpanel.hostinger.com)",
+      "ClaudeInChromeDomain(nic.com.uy)",
+      "mcp__claude-in-chrome__tabs_create_mcp"
     ]
   }
 }
