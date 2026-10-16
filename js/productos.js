@@ -127,7 +127,7 @@ window.DONASOL = {
       id: 'suavizante', cat: 'lavado', nombre: 'Suavizante',
       img: 'img/productos/suavizante.jpg',
       desc: 'Suaviza, desinfecta y perfuma delicadamente la ropa.',
-      tamanos: [{ t: '10 L', clave: 'suavizante' }]
+      tamanos: [{ t: '5 L', clave: 'suavizante' }, { t: '10 L', clave: 'suavizante_10L' }]
     },
 
     /* ── Higiene ──────────────────────────────────────────── */
