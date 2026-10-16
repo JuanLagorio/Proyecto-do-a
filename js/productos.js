@@ -206,7 +206,7 @@ window.DONASOL = {
     {
       id: 'microfibras', cat: 'textil', nombre: 'Microfibras',
       img: 'img/productos/microfibras.jpg',
-      desc: 'Paños de microfibra. Atrapan el polvo y secan sin dejar pelusa ni marcas.',
+      desc: 'Paños de microfibra de 40 × 40 cm. Atrapan el polvo y secan sin dejar pelusa ni marcas.',
       tamanos: [{ t: '5 u.', clave: 'microfibras' }]
     },
     {
