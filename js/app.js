@@ -324,13 +324,27 @@
     renderGrid();
   }
 
+  /* Si la lista ya se scrolleó, vuelve al primer producto, justo debajo de la barra fija.
+     La barra se mide por su `top` de CSS: con pocos productos la sección la empuja hacia arriba. */
+  function toListStart() {
+    const bar = $('#shopBar');
+    const barBottom = parseFloat(getComputedStyle(bar).top) + bar.offsetHeight;
+    const y = resultCount.getBoundingClientRect().top - barBottom - 14;
+    if (y < 0) window.scrollTo({ top: window.scrollY + y, behavior: reduced ? 'auto' : 'smooth' });
+  }
+
   chips.addEventListener('click', e => {
     const b = e.target.closest('[data-cat]');
     if (!b) return;
     const c = b.dataset.cat;
     if (c === 'all' || (!isAll() && active.size === 1 && active.has(c))) setFilter(CATS);
     else setFilter([c]);
-    b.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+    toListStart();
+    // renderChips() reemplazó los botones: se busca el nuevo y se lo deja a la vista dentro de la barra
+    const nb = $(`[data-cat="${c}"]`, chips);
+    const cr = chips.getBoundingClientRect(), br = nb.getBoundingClientRect();
+    const dx = br.left < cr.left ? br.left - cr.left - 8 : br.right > cr.right ? br.right - cr.right + 8 : 0;
+    if (dx) chips.scrollBy({ left: dx, behavior: reduced ? 'auto' : 'smooth' });
   });
 
   let searchTimer;
