@@ -14,6 +14,9 @@
    · Opcionales por producto:
        cover: true  → la foto llena el recuadro (para fotos con fondo de color)
        zoom: 1.3    → agranda la foto dentro del recuadro
+   · Fotos: al cambiar una foto, guardala con un nombre de archivo nuevo.
+     Los navegadores guardan las imágenes 7 días y con el mismo nombre
+     siguen mostrando la vieja.
    ════════════════════════════════════════════════════════════════ */
 
 window.DONASOL = {
@@ -63,7 +66,7 @@ window.DONASOL = {
     },
     {
       id: 'limpiador-liquido', cat: 'limpieza', nombre: 'Limpiador Desinfectante',
-      img: 'img/productos/limpiador-liquido.jpg',
+      img: 'img/productos/limpiador-desinfectante.jpg',
       desc: 'Limpiador líquido de alto poder desinfectante, en base a amonio cuaternario.',
       tamanos: [{ t: '5 L', clave: 'desinfectante_5L' }, { t: '10 L', clave: 'desinfectante_10L' }]
     },
@@ -131,7 +134,7 @@ window.DONASOL = {
     },
     {
       id: 'suavizante', cat: 'lavado', nombre: 'Suavizante',
-      img: 'img/productos/suavizante.jpg', zoom: 1.55,
+      img: 'img/productos/suavizante-ropa.jpg', zoom: 1.55,
       desc: 'Suaviza, desinfecta y perfuma delicadamente la ropa.',
       tamanos: [{ t: '5 L', clave: 'suavizante' }, { t: '10 L', clave: 'suavizante_10L' }]
     },
