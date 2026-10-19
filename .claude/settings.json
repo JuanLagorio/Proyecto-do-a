@@ -11,7 +11,8 @@
       "ClaudeInChromeDomain(localhost:8765)",
       "ClaudeInChromeDomain(hpanel.hostinger.com)",
       "ClaudeInChromeDomain(nic.com.uy)",
-      "mcp__claude-in-chrome__tabs_create_mcp"
+      "mcp__claude-in-chrome__tabs_create_mcp",
+      "ClaudeInChromeDomain(donasol.com.uy)"
     ]
   }
 }
