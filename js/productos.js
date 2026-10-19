@@ -113,7 +113,7 @@ window.DONASOL = {
       id: 'vinagre', cat: 'limpieza', nombre: 'Vinagre de Limpieza',
       img: 'img/productos/vinagre.jpg', cover: true,
       desc: 'Quita el sarro, desengrasa y elimina olores. Para baños, cocinas, vidrios y azulejos.',
-      tamanos: [{ t: '5 L', clave: 'vinagre' }]
+      tamanos: [{ t: '5 L', clave: 'vinagre_5L' }, { t: '10 L', clave: 'vinagre_10L' }]
     },
 
     /* ── Ropa y vajilla ───────────────────────────────────── */
