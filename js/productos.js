@@ -109,6 +109,12 @@ window.DONASOL = {
       desc: 'Hipoclorito de sodio al 100 %, para uso en piscinas.',
       tamanos: [{ t: '10 L', clave: 'hipoclorito' }]
     },
+    {
+      id: 'vinagre', cat: 'limpieza', nombre: 'Vinagre de Limpieza',
+      img: 'img/productos/vinagre.jpg', cover: true,
+      desc: 'Quita el sarro, desengrasa y elimina olores. Para baños, cocinas, vidrios y azulejos.',
+      tamanos: [{ t: '5 L', clave: 'vinagre' }]
+    },
 
     /* ── Ropa y vajilla ───────────────────────────────────── */
     {
