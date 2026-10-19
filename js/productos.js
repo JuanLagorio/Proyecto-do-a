@@ -154,7 +154,7 @@ window.DONASOL = {
     },
     {
       id: 'shampoo-manos', cat: 'higiene', nombre: 'Shampoo para Manos',
-      img: 'img/productos/shampoo-manos.jpg', zoom: 1.45,
+      img: 'img/productos/shampoo-manos-rojo.jpg', zoom: 1.45,
       desc: 'Limpia y desinfecta cuidando tus manos.',
       tamanos: [{ t: '5 L', clave: 'jabon-manos' }]
     },
