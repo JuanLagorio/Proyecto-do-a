@@ -57,7 +57,7 @@ window.DONASOL = {
     },
     {
       id: 'multiuso-citrico', cat: 'limpieza', nombre: 'Multiuso Cítrico',
-      img: 'img/productos/multiuso-citrico.png', zoom: 1.45,
+      img: 'img/productos/multiuso-citrico.jpg', zoom: 1.45,
       desc: 'Fragancia cítrica fresca y duradera, con acción desinfectante para una limpieza profunda.',
       tamanos: [{ t: '5 L', clave: 'mulcit_5L' }, { t: '10 L', clave: 'mulcit_10L' }]
     },
@@ -131,7 +131,7 @@ window.DONASOL = {
     },
     {
       id: 'suavizante', cat: 'lavado', nombre: 'Suavizante',
-      img: 'img/productos/suavizante.jpg',
+      img: 'img/productos/suavizante.jpg', zoom: 1.55,
       desc: 'Suaviza, desinfecta y perfuma delicadamente la ropa.',
       tamanos: [{ t: '5 L', clave: 'suavizante' }, { t: '10 L', clave: 'suavizante_10L' }]
     },
@@ -179,13 +179,13 @@ window.DONASOL = {
     /* ── Autos ────────────────────────────────────────────── */
     {
       id: 'emulsion-neumaticos', cat: 'autos', nombre: 'Emulsión Neumáticos',
-      img: 'img/productos/emulsion-neumaticos.png', zoom: 1.45,
+      img: 'img/productos/emulsion-neumaticos.jpg', zoom: 1.45,
       desc: 'Brillo profundo y duradero. Protege contra el desgaste y la decoloración. Fácil de aplicar y de secado rápido.',
       tamanos: [{ t: '5 L', clave: 'emulsion-neumaticos' }]
     },
     {
       id: 'emulsion-plasticos', cat: 'autos', nombre: 'Emulsión Plásticos',
-      img: 'img/productos/emulsion-plasticos.png', zoom: 1.45,
+      img: 'img/productos/emulsion-plasticos.jpg', zoom: 1.45,
       desc: 'Brillo profundo y duradero para tableros y plásticos. Protege contra el desgaste y la decoloración.',
       tamanos: [{ t: '5 L', clave: 'emulsion-plasticos' }]
     },
