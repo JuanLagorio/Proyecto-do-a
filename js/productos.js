@@ -39,7 +39,7 @@ window.DONASOL = {
      acepta el aviso de la página. */
   analitica: {
     google: 'G-TBQEDPNK3M',
-    clarity: ''
+    clarity: 'z0ciuqu50w'
   },
 
   categorias: {
