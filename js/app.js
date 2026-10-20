@@ -92,6 +92,7 @@
         void main.offsetWidth;
         main.classList.add('page-in');
       }
+      if (!initial) pageViewed();
     }
     const behavior = changed || reduced ? 'auto' : 'smooth';
     if (isNum(y)) window.scrollTo(0, y);
@@ -102,8 +103,6 @@
 
   function navigate(hash) {
     if (hash !== location.hash) {
-      // El título va antes del pushState: Google Analytics registra la página en ese momento
-      document.title = titleFor(resolve(hash).name);
       history.replaceState({ y: window.scrollY }, '');
       history.pushState(null, '', hash);
     }
@@ -146,6 +145,9 @@
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
   const track = (name, params = {}) => { if (AN.google) window.gtag('event', name, params); };
+  /* Google no registra solo los cambios de #sección: cada página se avisa a mano
+     (showPage la llama al cambiar de sección; la primera la manda gtag config) */
+  function pageViewed() { track('page_view', { page_title: document.title, page_location: location.href }); }
 
   function loadScript(src) {
     const s = document.createElement('script');
@@ -174,9 +176,12 @@
 
   const cookiesBox = $('#cookies');
   function setConsent(v) {
+    const was = consent;
     consent = v;
     store.set(CONSENT_KEY, v);
     if (AN.google) window.gtag('consent', 'update', { analytics_storage: v === 'si' ? 'granted' : 'denied' });
+    // La visita de entrada se mandó sin cookies: al aceptar se vuelve a avisar, ya contada
+    if (v === 'si' && was !== 'si') pageViewed();
     if (v === 'si') loadClarity();
     else if (window.clarity) window.clarity('consent', false);
     cookiesBox.hidden = true;
