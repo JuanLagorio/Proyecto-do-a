@@ -206,14 +206,14 @@
   };
   const gaList = list => ({ currency: 'UYU', value: total(list), items: list.map(i => gaItem(i.id, i.t, i.q)) });
 
-  /* Teléfono, email y WhatsApp (el envío del pedido se mide aparte) */
+  /* Teléfono, email, WhatsApp e Instagram (el envío del pedido se mide aparte) */
   document.addEventListener('click', e => {
-    const a = e.target.closest('a[href^="tel:"], a[href^="mailto:"], a[href*="wa.me/"]');
+    const a = e.target.closest('a[href^="tel:"], a[href^="mailto:"], a[href*="wa.me/"], a[href*="instagram.com/"]');
     if (!a || a.id === 'sendOrder' || a.id === 'sentAgain') return;
     const href = a.getAttribute('href');
     const host = a.closest('[id]');
     track('contacto', {
-      metodo: href.startsWith('tel:') ? 'telefono' : href.startsWith('mailto:') ? 'email' : 'whatsapp',
+      metodo: href.startsWith('tel:') ? 'telefono' : href.startsWith('mailto:') ? 'email' : href.includes('instagram.com/') ? 'instagram' : 'whatsapp',
       ubicacion: (host && host.id) || a.classList[0] || ''
     });
   });
