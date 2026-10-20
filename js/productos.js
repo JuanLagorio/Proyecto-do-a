@@ -34,6 +34,14 @@ window.DONASOL = {
     apiKey: 'AIzaSyB7vslGtZ0p36LNiczI2UBgS5E3cByeQIw'
   },
 
+  /* Métricas: Google Analytics (ID de medición G-…) y Microsoft Clarity
+     (Project ID). Vacío = no se carga. Solo guardan cookies si la persona
+     acepta el aviso de la página. */
+  analitica: {
+    google: 'G-TBQEDPNK3M',
+    clarity: ''
+  },
+
   categorias: {
     limpieza: 'Limpieza',
     lavado:   'Ropa y vajilla',

@@ -19,7 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..900&family=Caveat:wght@600;700&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- ?v= : cambiarlo cada vez que se modifique el CSS o el JS, así los
        celulares no mezclan archivos nuevos con otros viejos guardados -->
-  <link rel="stylesheet" href="css/styles.css?v=20261019g">
+  <link rel="stylesheet" href="css/styles.css?v=20261019h">
 
   <script type="application/ld+json">
   {
@@ -606,7 +606,10 @@
 
   <div class="wrap foot__legal">
     <span>© <span data-year>2026</span> Doña Sol de Levin y Levin · Industria uruguaya</span>
-    <button class="foot__top" type="button" data-top>Volver arriba ↑</button>
+    <span class="foot__links">
+      <button class="foot__top" type="button" data-cookies-open>Cookies</button>
+      <button class="foot__top" type="button" data-top>Volver arriba ↑</button>
+    </span>
   </div>
 </footer>
 
@@ -620,6 +623,15 @@
   <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>
 </button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Aviso de cookies: lo muestra js/app.js si hay métricas configuradas -->
+<section class="cookies" id="cookies" aria-label="Aviso de cookies" hidden>
+  <p>Usamos cookies para saber cuánta gente visita la página y qué productos busca, así la vamos mejorando. No las usamos para publicidad.</p>
+  <div class="cookies__btns">
+    <button class="btn btn--ghost" type="button" data-cookies="no">No, gracias</button>
+    <button class="btn btn--red" type="button" data-cookies="si">Aceptar</button>
+  </div>
+</section>
 
 <!-- ═══════════ Menú móvil ═══════════ -->
 <dialog class="menu" id="menu" aria-label="Menú">
@@ -730,7 +742,7 @@
   </div>
 </dialog>
 
-<script src="js/productos.js?v=20261019g"></script>
-<script src="js/app.js?v=20261019g"></script>
+<script src="js/productos.js?v=20261019h"></script>
+<script src="js/app.js?v=20261019h"></script>
 </body>
 </html>

@@ -68,6 +68,11 @@
     return host ? { name: host.dataset.page, el } : { name: page || 'inicio', el: null };
   }
 
+  const titleFor = name => {
+    const titled = pages.find(s => s.dataset.page === name && s.dataset.title);
+    return titled ? `${titled.dataset.title} · Doña Sol` : BASE_TITLE;
+  };
+
   function showPage(hash, y) {
     const { name, el } = resolve(hash);
     const first = pages.find(s => s.dataset.page === name);
@@ -77,8 +82,7 @@
       page = name;
       pages.forEach(s => { s.hidden = s.dataset.page !== name; });
       document.body.dataset.page = name;
-      const titled = pages.find(s => s.dataset.page === name && s.dataset.title);
-      document.title = titled ? `${titled.dataset.title} · Doña Sol` : BASE_TITLE;
+      document.title = titleFor(name);
       pageLinks.forEach(a => {
         if (resolve(a.getAttribute('href')).name === name) a.setAttribute('aria-current', 'page');
         else a.removeAttribute('aria-current');
@@ -98,6 +102,8 @@
 
   function navigate(hash) {
     if (hash !== location.hash) {
+      // El título va antes del pushState: Google Analytics registra la página en ese momento
+      document.title = titleFor(resolve(hash).name);
       history.replaceState({ y: window.scrollY }, '');
       history.pushState(null, '', hash);
     }
@@ -129,6 +135,83 @@
   }));
 
   showPage(location.hash);
+
+  /* ─── Métricas ───────────────────────────────────────────────────
+     Google Analytics y Clarity, con los IDs de js/productos.js → analitica.
+     Hasta que la persona acepta el aviso de cookies, Google mide sin
+     guardar cookies (modo de consentimiento) y Clarity no se carga. */
+  const AN = D.analitica || {};
+  const CONSENT_KEY = 'donasol.cookies.v1';
+  let consent = store.get(CONSENT_KEY, null);   // 'si' | 'no' | null = todavía no respondió
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  const track = (name, params = {}) => { if (AN.google) window.gtag('event', name, params); };
+
+  function loadScript(src) {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = src;
+    document.head.appendChild(s);
+  }
+
+  if (AN.google) {
+    window.gtag('consent', 'default', {
+      analytics_storage: consent === 'si' ? 'granted' : 'denied',
+      ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied'
+    });
+    window.gtag('js', new Date());
+    window.gtag('config', AN.google);
+    loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(AN.google)}`);
+  }
+
+  function loadClarity() {
+    if (!AN.clarity || window.clarity) return;
+    window.clarity = function () { (window.clarity.q = window.clarity.q || []).push(arguments); };
+    loadScript(`https://www.clarity.ms/tag/${encodeURIComponent(AN.clarity)}`);
+    window.clarity('consent');
+  }
+  if (consent === 'si') loadClarity();
+
+  const cookiesBox = $('#cookies');
+  function setConsent(v) {
+    consent = v;
+    store.set(CONSENT_KEY, v);
+    if (AN.google) window.gtag('consent', 'update', { analytics_storage: v === 'si' ? 'granted' : 'denied' });
+    if (v === 'si') loadClarity();
+    else if (window.clarity) window.clarity('consent', false);
+    cookiesBox.hidden = true;
+  }
+  if ((AN.google || AN.clarity) && !consent) cookiesBox.hidden = false;
+  cookiesBox.addEventListener('click', e => {
+    const b = e.target.closest('[data-cookies]');
+    if (b) setConsent(b.dataset.cookies);
+  });
+  $$('[data-cookies-open]').forEach(b => b.addEventListener('click', () => {
+    cookiesBox.hidden = false;
+    $('[data-cookies="si"]', cookiesBox).focus();
+  }));
+
+  /* Productos en el formato de comercio electrónico de Google */
+  const gaItem = (id, t, q) => {
+    const p = byId[id];
+    const pr = priceOf(id, t);
+    const item = { item_id: id, item_name: p.nombre, item_category: D.categorias[p.cat], item_variant: t, quantity: q };
+    if (isNum(pr)) item.price = pr;
+    return item;
+  };
+  const gaList = list => ({ currency: 'UYU', value: total(list), items: list.map(i => gaItem(i.id, i.t, i.q)) });
+
+  /* Teléfono, email y WhatsApp (el envío del pedido se mide aparte) */
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="tel:"], a[href^="mailto:"], a[href*="wa.me/"]');
+    if (!a || a.id === 'sendOrder' || a.id === 'sentAgain') return;
+    const href = a.getAttribute('href');
+    const host = a.closest('[id]');
+    track('contacto', {
+      metodo: href.startsWith('tel:') ? 'telefono' : href.startsWith('mailto:') ? 'email' : 'whatsapp',
+      ubicacion: (host && host.id) || a.classList[0] || ''
+    });
+  });
 
   /* ─── Diálogos ───────────────────────────────────────────────── */
   function openDialog(d) {
@@ -202,6 +285,7 @@
   function setQty(id, t, q) {
     if (!sizeOk(id, t)) return;
     q = Math.max(0, Math.min(999, Math.floor(q) || 0));
+    const before = qtyOf(id, t);
     const i = findIdx(id, t);
     if (q === 0) { if (i > -1) cart.splice(i, 1); }
     else if (i > -1) cart[i].q = q;
@@ -209,6 +293,7 @@
     sent = false;
     store.set(CART_KEY, cart);
     onCartChange();
+    if (q !== before) track(q > before ? 'add_to_cart' : 'remove_from_cart', gaList([{ id, t, q: Math.abs(q - before) }]));
   }
   const addOne = (id, t) => setQty(id, t, qtyOf(id, t) + 1);
 
@@ -219,6 +304,7 @@
   };
   let orderCode = newCode();
   let sent = false;
+  let trackedOrder = null;
 
   /* ─── Catálogo ───────────────────────────────────────────────── */
   const grid = $('#grid');
@@ -228,6 +314,7 @@
   const askWa = $('#askWa');
   let active = new Set(CATS);
   let query = '';
+  let shownCount = 0;
   const selSize = {};
   const sizeOf = p => selSize[p.id] && sizeOk(p.id, selSize[p.id]) ? selSize[p.id] : p.tamanos[0].t;
   const isAll = () => active.size === CATS.length;
@@ -305,6 +392,7 @@
   function renderGrid() {
     const words = norm(query.trim()).split(/\s+/).filter(Boolean);
     const list = D.productos.filter(p => active.has(p.cat) && words.every(w => p._s.includes(w)));
+    shownCount = list.length;
     grid.innerHTML = list.map(cardHTML).join('');
 
     const q = query.trim();
@@ -339,6 +427,7 @@
     const c = b.dataset.cat;
     if (c === 'all' || (!isAll() && active.size === 1 && active.has(c))) setFilter(CATS);
     else setFilter([c]);
+    track('ver_categoria', { categoria: isAll() ? 'Todos' : D.categorias[c] });
     toListStart();
     // renderChips() reemplazó los botones: se busca el nuevo y se lo deja a la vista dentro de la barra
     const nb = $(`[data-cat="${c}"]`, chips);
@@ -347,7 +436,7 @@
     if (dx) chips.scrollBy({ left: dx, behavior: reduced ? 'auto' : 'smooth' });
   });
 
-  let searchTimer;
+  let searchTimer, searchTrackTimer, lastSearch = '';
   search.addEventListener('input', () => {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
@@ -355,16 +444,27 @@
       if (query.trim() && !isAll()) { active = new Set(CATS); renderChips(); }
       renderGrid();
     }, 120);
+    // La búsqueda se mide cuando la persona deja de escribir, no letra por letra
+    clearTimeout(searchTrackTimer);
+    searchTrackTimer = setTimeout(() => {
+      const term = norm(search.value.trim());
+      if (term.length < 2 || term === lastSearch) return;
+      lastSearch = term;
+      track('search', { search_term: term });
+      if (!shownCount) track('busqueda_sin_resultados', { search_term: term });
+    }, 1500);
   });
 
   function clearSearch() { query = ''; search.value = ''; }
 
   $$('[data-line], [data-line-link]').forEach(a => {
     a.addEventListener('click', () => {
-      const cats = D.lineas[a.dataset.line || a.dataset.lineLink];
+      const linea = a.dataset.line || a.dataset.lineLink;
+      const cats = D.lineas[linea];
       if (!cats) return;
       clearSearch();
       setFilter(cats);
+      track('ver_linea', { linea });
     });
   });
 
@@ -423,6 +523,7 @@
     $('#quickAsk').href = waUrl(`¡Hola, Doña Sol! Quería consultar por: ${p.nombre}.`);
     renderQuick(true);
     openDialog(quick);
+    track('view_item', gaList([{ id, t: sizeOf(p), q: 1 }]));
   }
 
   function renderQuick(full) {
@@ -518,6 +619,8 @@
     sent = false;
     store.set(CART_KEY, cart);
     onCartChange();
+    track('add_to_cart', gaList(items.map(([id, t, q]) => ({ id, t, q: q || 1 }))));
+    track('agregar_kit', { kit: k.nombre });
     flyFrom($('.kit__thumbs img', b.closest('.kit')), byId[items[0][0]]);
     toast(`Sumaste el <b>Kit ${esc(k.nombre)}</b>`, byId[items[0][0]]);
     const label = $('span', b);
@@ -777,6 +880,11 @@
     sendBtn.href = url;
     $('#sentAgain').href = url;
     $('#sentCode').textContent = orderCode;
+    // Pedido enviado por WhatsApp = "compra" para Google (el total es estimado, sin confirmar)
+    if (trackedOrder !== orderCode) {
+      trackedOrder = orderCode;
+      track('purchase', Object.assign({ transaction_id: orderCode, tipo_cliente: f.tipo }, gaList(cart)));
+    }
     setTimeout(() => { sent = true; renderCart(); }, 350);
   });
 
