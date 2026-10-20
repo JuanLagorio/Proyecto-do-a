@@ -128,7 +128,7 @@ window.DONASOL = {
     },
     {
       id: 'vinagre', cat: 'limpieza', nombre: 'Vinagre de Limpieza',
-      img: 'img/productos/vinagre-limpieza.jpg', zoom: 1.3,
+      img: 'img/productos/vinagre-bidon.jpg', zoom: 1.3,
       desc: 'Quita el sarro, desengrasa y elimina olores. Para baños, cocinas, vidrios y azulejos.',
       tamanos: [{ t: '5 L', clave: 'vinagre_5L' }, { t: '10 L', clave: 'vinagre_10L' }]
     },
@@ -148,7 +148,7 @@ window.DONASOL = {
     },
     {
       id: 'suavizante', cat: 'lavado', nombre: 'Suavizante',
-      img: 'img/productos/suavizante-bidon.jpg', zoom: 1.3,
+      img: 'img/productos/suavizante-blanco.jpg', zoom: 1.3,
       desc: 'Suaviza, desinfecta y perfuma delicadamente la ropa.',
       tamanos: [{ t: '5 L', clave: 'suavizante' }, { t: '10 L', clave: 'suavizante_10L' }]
     },
