@@ -128,7 +128,7 @@ window.DONASOL = {
     },
     {
       id: 'vinagre', cat: 'limpieza', nombre: 'Vinagre de Limpieza',
-      img: 'img/productos/vinagre.jpg', cover: true,
+      img: 'img/productos/vinagre-limpieza.jpg', zoom: 1.3,
       desc: 'Quita el sarro, desengrasa y elimina olores. Para baños, cocinas, vidrios y azulejos.',
       tamanos: [{ t: '5 L', clave: 'vinagre_5L' }, { t: '10 L', clave: 'vinagre_10L' }]
     },
@@ -148,7 +148,7 @@ window.DONASOL = {
     },
     {
       id: 'suavizante', cat: 'lavado', nombre: 'Suavizante',
-      img: 'img/productos/suavizante-ropa.jpg', zoom: 1.55,
+      img: 'img/productos/suavizante-bidon.jpg', zoom: 1.3,
       desc: 'Suaviza, desinfecta y perfuma delicadamente la ropa.',
       tamanos: [{ t: '5 L', clave: 'suavizante' }, { t: '10 L', clave: 'suavizante_10L' }]
     },
@@ -234,13 +234,13 @@ window.DONASOL = {
     },
     {
       id: 'guantes-negros', cat: 'textil', nombre: 'Guantes de Látex Negros',
-      img: 'img/productos/guantes-negros.jpg', cover: true,
+      img: 'img/productos/guantes-negros-latex.jpg', zoom: 1.05,
       desc: 'Ultra resistentes, para tareas pesadas. Excelente agarre en seco y mojado. Para industria, mantenimiento y construcción.',
       tamanos: [{ t: '10 pares', clave: 'guantes-negros' }]
     },
     {
       id: 'guantes-amarillos', cat: 'textil', nombre: 'Guantes de Látex Amarillos',
-      img: 'img/productos/guantes-amarillos.jpg', cover: true,
+      img: 'img/productos/guantes-amarillos-latex.jpg', zoom: 1.05,
       desc: 'Látex natural de alta resistencia, clorinados y sin talco. Textura rugosa para mejor agarre en industria alimenticia, química y mantenimiento.',
       tamanos: [{ t: '10 pares', clave: 'guantes-amarillos' }]
     },
