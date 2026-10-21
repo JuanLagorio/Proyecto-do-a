@@ -80,7 +80,7 @@ window.DONASOL = {
     },
     {
       id: 'amonio-cuaternario', cat: 'limpieza', nombre: 'Amonio Cuaternario',
-      img: 'img/productos/amonio-cuaternario.jpg',
+      img: 'img/productos/amonio-cuaternario-bidon.jpg',
       desc: 'Desinfectante de amplio espectro, sin olor agresivo. Apto para superficies en contacto con alimentos.',
       tamanos: [{ t: '5 L', clave: 'amonio-cuaternario' }]
     },
