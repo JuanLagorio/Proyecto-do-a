@@ -296,23 +296,27 @@ window.DONASOL = {
     }
   ],
 
-  /* Kits: combinaciones listas que se suman al carrito con un toque.
-     Cada ítem es [id del producto, tamaño, cantidad]. */
+  /* Kits: combinaciones listas que se suman al pedido con un toque.
+     Cada ítem es [id del producto, tamaño, cantidad].
+     descuento → % menos que la suma de los precios base de sus productos.
+                 El precio del kit se calcula solo y se redondea hacia abajo
+                 a la decena, así sigue los cambios de precio del panel.
+                 Si a algún producto le falta precio, el kit queda a confirmar. */
   kits: [
     {
-      id: 'casa', nombre: 'Casa Brillante', para: 'Para el hogar',
+      id: 'casa', nombre: 'Casa Brillante', para: 'Para el hogar', descuento: 10,
       desc: 'Lo básico para que la casa quede impecable de punta a punta.',
-      items: [['multiuso', '5 L', 1], ['limpiavidrios', '2 L', 1], ['cremoso', '750 g', 1], ['rejillas', '6 u.', 1], ['panos-piso', '6 u.', 1]]
+      items: [['multiuso', '5 L', 1], ['lavandina', '10 L', 1], ['limpiavidrios', '2 L', 1], ['cremoso', '750 g', 1], ['rejillas', '6 u.', 1], ['panos-piso', '6 u.', 1]]
     },
     {
-      id: 'cocina', nombre: 'Cocina Profesional', para: 'Para gastronomía',
+      id: 'cocina', nombre: 'Cocina Profesional', para: 'Para gastronomía', descuento: 10,
       desc: 'Para restaurantes, rotiserías y cocinas que no paran nunca.',
       items: [['detergente', '10 L', 1], ['desengrasante', '5 L', 1], ['alcohol-gel', '5 L', 1], ['rollo-cocina', 'Funda × 12 rollos', 1], ['guantes-amarillos', '10 pares', 1]]
     },
     {
-      id: 'autos', nombre: 'Lavadero de Autos', para: 'Para talleres y lavaderos',
+      id: 'autos', nombre: 'Lavadero de Autos', para: 'Para talleres y lavaderos', descuento: 10,
       desc: 'Brillo, protección y buen aroma para cada vehículo que sale.',
-      items: [['emulsion-neumaticos', '5 L', 1], ['emulsion-plasticos', '5 L', 1], ['desengrasante', '5 L', 1], ['franelas', '6 u.', 1], ['perfumador', '½ L', 1]]
+      items: [['emulsion-neumaticos', '5 L', 1], ['emulsion-plasticos', '5 L', 1], ['desengrasante', '5 L', 1], ['microfibras', '5 u.', 1], ['franelas', '6 u.', 1], ['perfumador', '½ L', 1]]
     }
   ],
 

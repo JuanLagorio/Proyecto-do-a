@@ -30,6 +30,13 @@
   const priceOf = (id, t) => { const s = byId[id] && byId[id].tamanos.find(x => x.t === t); return s ? s.precio : null; };
   let hasPrices = false;
 
+  /* Kits: su precio es la suma de sus productos con el descuento, redondeada hacia abajo a la decena */
+  const kitById = Object.fromEntries((D.kits || []).map(k => [k.id, k]));
+  const kitItems = k => k.items.filter(([id, t]) => sizeOk(id, t));
+  const kitSum = k => kitItems(k).reduce((a, [id, t, q]) => { const p = priceOf(id, t); return isNum(a) && isNum(p) ? a + p * (q || 1) : null; }, 0);
+  const kitPrice = k => { const s = kitSum(k); return isNum(s) ? Math.floor(s * (1 - (k.descuento || 0) / 100) / 10) * 10 : null; };
+  const kitText = k => kitItems(k).map(([id, t, q]) => `${q > 1 ? q + ' × ' : ''}${byId[id].nombre} (${t})`).join(', ');
+
   const store = {
     get(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* almacenamiento no disponible */ } }
@@ -204,7 +211,13 @@
     if (isNum(pr)) item.price = pr;
     return item;
   };
-  const gaList = list => ({ currency: 'UYU', value: total(list), items: list.map(i => gaItem(i.id, i.t, i.q)) });
+  const gaKit = (k, q) => {
+    const pr = kitPrice(k);
+    const item = { item_id: `kit-${k.id}`, item_name: `Kit ${k.nombre}`, item_category: 'Kits', quantity: q };
+    if (isNum(pr)) item.price = pr;
+    return item;
+  };
+  const gaList = list => ({ currency: 'UYU', value: total(list), items: list.map(i => i.kit ? gaKit(kitById[i.kit], i.q) : gaItem(i.id, i.t, i.q)) });
 
   /* Teléfono, email, WhatsApp e Instagram (el envío del pedido se mide aparte) */
   document.addEventListener('click', e => {
@@ -275,31 +288,49 @@
   /* ─── Carrito: estado ────────────────────────────────────────── */
   const CART_KEY = 'donasol.pedido.v1';
   const CLIENT_KEY = 'donasol.cliente.v1';
+  /* Cada línea del pedido es un producto { id, t, q } o un kit { kit, q } */
+  const lineOk = i => i.kit ? !!kitById[i.kit] && kitItems(kitById[i.kit]).length > 0 : sizeOk(i.id, i.t);
+  const sameLine = (a, b) => a.kit || b.kit ? a.kit === b.kit : a.id === b.id && a.t === b.t;
+  const linePrice = i => i.kit ? kitPrice(kitById[i.kit]) : priceOf(i.id, i.t);
+
   let cart = store.get(CART_KEY, []);
   if (!Array.isArray(cart)) cart = [];
-  cart = cart.filter(i => i && sizeOk(i.id, i.t) && i.q > 0);
+  cart = cart.filter(i => i && lineOk(i) && i.q > 0);
 
-  const findIdx = (id, t) => cart.findIndex(i => i.id === id && i.t === t);
-  const qtyOf = (id, t) => { const i = findIdx(id, t); return i > -1 ? cart[i].q : 0; };
+  const lineIdx = line => cart.findIndex(i => sameLine(i, line));
+  const lineQty = line => { const i = lineIdx(line); return i > -1 ? cart[i].q : 0; };
+  const qtyOf = (id, t) => lineQty({ id, t });
   const inCart = id => cart.some(i => i.id === id);
   const units = (list = cart) => list.reduce((a, i) => a + i.q, 0);
-  const total = (list = cart) => list.reduce((a, i) => { const p = priceOf(i.id, i.t); return isNum(p) ? a + p * i.q : a; }, 0);
-  const allPriced = (list = cart) => list.length > 0 && list.every(i => isNum(priceOf(i.id, i.t)));
-  const somePriced = (list = cart) => list.some(i => isNum(priceOf(i.id, i.t)));
+  const total = (list = cart) => list.reduce((a, i) => { const p = linePrice(i); return isNum(p) ? a + p * i.q : a; }, 0);
+  const allPriced = (list = cart) => list.length > 0 && list.every(i => isNum(linePrice(i)));
+  const somePriced = (list = cart) => list.some(i => isNum(linePrice(i)));
+  const kitSavings = (list = cart) => list.reduce((a, i) => {
+    const k = i.kit && kitById[i.kit];
+    const p = k && kitPrice(k);
+    return isNum(p) ? a + (kitSum(k) - p) * i.q : a;
+  }, 0);
+  // "1 kit + 2 productos"
+  const linesText = (list = cart) => {
+    const kits = list.filter(i => i.kit).length;
+    const prods = list.length - kits;
+    return [kits && plural(kits, 'kit', 'kits'), prods && plural(prods, 'producto', 'productos')].filter(Boolean).join(' + ');
+  };
 
-  function setQty(id, t, q) {
-    if (!sizeOk(id, t)) return;
+  function setLine(line, q) {
+    if (!lineOk(line)) return;
     q = Math.max(0, Math.min(999, Math.floor(q) || 0));
-    const before = qtyOf(id, t);
-    const i = findIdx(id, t);
+    const before = lineQty(line);
+    const i = lineIdx(line);
     if (q === 0) { if (i > -1) cart.splice(i, 1); }
     else if (i > -1) cart[i].q = q;
-    else cart.push({ id, t, q });
+    else cart.push(Object.assign({}, line, { q }));
     sent = false;
     store.set(CART_KEY, cart);
     onCartChange();
-    if (q !== before) track(q > before ? 'add_to_cart' : 'remove_from_cart', gaList([{ id, t, q: Math.abs(q - before) }]));
+    if (q !== before) track(q > before ? 'add_to_cart' : 'remove_from_cart', gaList([Object.assign({}, line, { q: Math.abs(q - before) })]));
   }
+  const setQty = (id, t, q) => setLine({ id, t }, q);
   const addOne = (id, t) => setQty(id, t, qtyOf(id, t) + 1);
 
   const newCode = () => {
@@ -587,12 +618,13 @@
 
   /* ─── Kits ───────────────────────────────────────────────────── */
   const kitsGrid = $('#kitsGrid');
-  const kitItems = k => k.items.filter(([id, t]) => sizeOk(id, t));
+  const KIT_LABEL = 'Sumar kit a mi pedido';
+  const kitList = (D.kits || []).filter(k => kitItems(k).length);
 
-  kitsGrid.innerHTML = D.kits.map(k => {
+  kitsGrid.innerHTML = kitList.map(k => {
     const items = kitItems(k);
     return `
-      <article class="kit" data-reveal>
+      <article class="kit" data-kit="${k.id}" data-reveal>
         <div class="kit__head">
           <p class="kit__para">${esc(k.para)}</p>
           <h3 class="kit__name">Kit ${esc(k.nombre)}</h3>
@@ -605,39 +637,55 @@
           ${items.map(([id, t, q]) => `<li><span>${q > 1 ? q + ' × ' : ''}${esc(byId[id].nombre)}</span><span>${esc(t)}</span></li>`).join('')}
         </ul>
         <div class="kit__foot">
-          <button class="btn btn--red" type="button" data-kit="${k.id}">${ICON('i-plus')} <span>Sumar kit a mi pedido</span></button>
+          <div class="kit__deal"></div>
+          <div class="buy">${buyHTML(0, KIT_LABEL)}</div>
         </div>
       </article>`;
   }).join('');
 
+  /* Precio del kit contra lo que sale por separado. Se rehace cuando llegan los precios. */
+  function kitDealHTML(k) {
+    const pr = kitPrice(k);
+    const sum = kitSum(k);
+    const off = k.descuento || 0;
+    if (isNum(pr) && pr < sum) {
+      return `<p class="kit__price"><small>Precio del kit</small><b>${money(pr)}</b><s>${money(sum)} por separado</s></p>
+        <p class="kit__save"><small>Ahorrás</small><b>${money(sum - pr)}</b></p>`;
+    }
+    if (isNum(pr)) return `<p class="kit__price"><small>Precio del kit</small><b>${money(pr)}</b></p>`;
+    return off ? `<p class="kit__price"><small>Precio del kit</small><b>${off} % menos</b><span>que comprando cada producto por separado</span></p>` : '';
+  }
+  const renderKitDeals = () => $$('.kit', kitsGrid).forEach(el => { $('.kit__deal', el).innerHTML = kitDealHTML(kitById[el.dataset.kit]); });
+  const syncKits = () => $$('.kit', kitsGrid).forEach(el => {
+    const q = lineQty({ kit: el.dataset.kit });
+    updateBuy($('.buy', el), q, KIT_LABEL);
+    el.classList.toggle('in-cart', q > 0);
+  });
+
   kitsGrid.addEventListener('click', e => {
-    const b = e.target.closest('[data-kit]');
+    const b = e.target.closest('[data-act]');
     if (!b) return;
-    const k = D.kits.find(x => x.id === b.dataset.kit);
-    if (!k) return;
-    const items = kitItems(k);
-    items.forEach(([id, t, q]) => {
-      const i = findIdx(id, t);
-      if (i > -1) cart[i].q = Math.min(999, cart[i].q + (q || 1));
-      else cart.push({ id, t, q: q || 1 });
-    });
-    sent = false;
-    store.set(CART_KEY, cart);
-    onCartChange();
-    track('add_to_cart', gaList(items.map(([id, t, q]) => ({ id, t, q: q || 1 }))));
-    track('agregar_kit', { kit: k.nombre });
-    flyFrom($('.kit__thumbs img', b.closest('.kit')), byId[items[0][0]]);
-    toast(`Sumaste el <b>Kit ${esc(k.nombre)}</b>`, byId[items[0][0]]);
-    const label = $('span', b);
-    b.classList.replace('btn--red', 'btn--ink');
-    label.textContent = '¡Sumado a tu pedido!';
-    $('use', b).setAttribute('href', '#i-check');
-    clearTimeout(b._t);
-    b._t = setTimeout(() => {
-      b.classList.replace('btn--ink', 'btn--red');
-      label.textContent = 'Sumar kit a mi pedido';
-      $('use', b).setAttribute('href', '#i-plus');
-    }, 2200);
+    const el = b.closest('.kit');
+    const k = kitById[el.dataset.kit];
+    const line = { kit: k.id };
+    const first = byId[kitItems(k)[0][0]];
+    switch (b.dataset.act) {
+      case 'add':
+        setLine(line, 1);
+        track('agregar_kit', { kit: k.nombre });
+        flyFrom($('.kit__thumbs img', el), first);
+        toast(`Sumaste el <b>Kit ${esc(k.nombre)}</b>`, first);
+        focusIn($('.buy', el), 'inc');
+        break;
+      case 'inc':
+        setLine(line, lineQty(line) + 1);
+        track('agregar_kit', { kit: k.nombre });
+        break;
+      case 'dec':
+        setLine(line, lineQty(line) - 1);
+        if (!lineQty(line)) focusIn($('.buy', el), 'add');
+        break;
+    }
   });
 
   /* ─── Portada: producto que gira ─────────────────────────────── */
@@ -774,7 +822,7 @@
   function renderCart() {
     const n = units();
     $('#drawerSub').textContent = n
-      ? `${plural(n, 'unidad', 'unidades')} · ${plural(cart.length, 'producto', 'productos')}`
+      ? `${plural(n, 'unidad', 'unidades')} · ${linesText()}`
       : 'Todavía está vacío';
 
     $('#cartEmpty').hidden = n > 0 || sent;
@@ -782,7 +830,30 @@
     $('#drawerFoot').hidden = n === 0 || sent;
     $('#cartSent').hidden = !sent;
 
+    const stepperHTML = (q, name) => `
+          <div class="stepper stepper--sm">
+            <button type="button" data-act="dec" aria-label="Quitar uno de ${esc(name)}">${ICON(q === 1 ? 'i-trash' : 'i-minus')}</button>
+            <output>${q}</output>
+            <button type="button" data-act="inc" aria-label="Agregar uno de ${esc(name)}">${ICON('i-plus')}</button>
+          </div>`;
+
     cartList.innerHTML = cart.map(i => {
+      if (i.kit) {
+        const k = kitById[i.kit];
+        const items = kitItems(k);
+        const pr = kitPrice(k);
+        const sum = kitSum(k);
+        return `
+        <li data-kit="${k.id}">
+          <div class="cart-list__img cart-list__img--kit">${items.slice(0, 4).map(([id]) => { const p = byId[id]; return `<span class="${p.cover ? 'is-cover' : ''}" style="background:${tintOf(p)}"><img src="${p.img}" alt=""></span>`; }).join('')}</div>
+          <div>
+            <p class="cart-list__name">Kit ${esc(k.nombre)}</p>
+            <p class="cart-list__meta">${plural(items.length, 'producto', 'productos')}${isNum(pr) ? ` · <b>${money(pr * i.q)}</b>${pr < sum ? ` <s>${money(sum * i.q)}</s>` : ''}` : ''}</p>
+            <p class="cart-list__inc">${esc(kitText(k))}</p>
+          </div>
+          ${stepperHTML(i.q, `Kit ${k.nombre}`)}
+        </li>`;
+      }
       const p = byId[i.id];
       const pr = priceOf(i.id, i.t);
       return `
@@ -792,11 +863,7 @@
             <p class="cart-list__name">${esc(p.nombre)}</p>
             <p class="cart-list__meta">${esc(i.t)}${isNum(pr) ? ` · <b>${money(pr * i.q)}</b>` : ''}</p>
           </div>
-          <div class="stepper stepper--sm">
-            <button type="button" data-act="dec" aria-label="Quitar uno de ${esc(p.nombre)}">${ICON(i.q === 1 ? 'i-trash' : 'i-minus')}</button>
-            <output>${i.q}</output>
-            <button type="button" data-act="inc" aria-label="Agregar uno de ${esc(p.nombre)}">${ICON('i-plus')}</button>
-          </div>
+          ${stepperHTML(i.q, p.nombre)}
         </li>`;
     }).join('');
 
@@ -804,16 +871,20 @@
     $('#sumTotal').textContent = !somePriced()
       ? 'Precio a confirmar'
       : allPriced() ? money(total()) : `${money(total())} + a confirmar`;
+    const saved = kitSavings();
+    $('#sumSave').hidden = !saved;
+    $('#sumSave').textContent = saved ? `Con los kits ahorrás ${money(saved)}` : '';
   }
+
+  const lineOf = li => li.dataset.kit ? { kit: li.dataset.kit } : { id: li.dataset.id, t: li.dataset.t };
 
   cartList.addEventListener('click', e => {
     const b = e.target.closest('[data-act]');
     if (!b) return;
-    const li = b.closest('li');
-    const { id, t } = li.dataset;
+    const line = lineOf(b.closest('li'));
     const act = b.dataset.act;
-    setQty(id, t, qtyOf(id, t) + (act === 'inc' ? 1 : -1));
-    const again = $$('li', cartList).find(x => x.dataset.id === id && x.dataset.t === t);
+    setLine(line, lineQty(line) + (act === 'inc' ? 1 : -1));
+    const again = $$('li', cartList).find(x => sameLine(lineOf(x), line));
     if (again) focusIn(again, act);
     else (cart.length ? $('[data-act]', cartList) : $('[data-close]', drawer)).focus();
   });
@@ -850,14 +921,22 @@
     const L = ['¡Hola, Doña Sol! Quiero hacer este pedido desde la web:', ''];
     L.push(`*Pedido ${code}*`);
     list.forEach(i => {
-      const p = byId[i.id];
-      const pr = priceOf(i.id, i.t);
-      L.push(`• ${i.q} × ${p.nombre} (${i.t})${isNum(pr) ? ` — ${money(pr * i.q)}` : ''}`);
+      const pr = linePrice(i);
+      const cost = isNum(pr) ? ` — ${money(pr * i.q)}` : '';
+      if (i.kit) {
+        const k = kitById[i.kit];
+        L.push(`• ${i.q} × Kit ${k.nombre}${cost}`);
+        L.push(`   Incluye: ${kitText(k)}`);
+      } else {
+        L.push(`• ${i.q} × ${byId[i.id].nombre} (${i.t})${cost}`);
+      }
     });
     L.push('');
     L.push(`Total: ${plural(units(list), 'unidad', 'unidades')}`);
     if (somePriced(list)) {
       L.push(`*Total estimado: ${money(total(list))}${allPriced(list) ? '' : ' + productos a confirmar'}*`);
+      const saved = kitSavings(list);
+      if (saved) L.push(`Ahorro por kits: ${money(saved)}`);
     }
     L.push('', '*Mis datos*');
     L.push(`Nombre: ${f.nombre || '(tu nombre)'}`);
@@ -933,8 +1012,9 @@
     });
     floatCart.hidden = n === 0;
     floatWa.hidden = n > 0;
-    $('#floatTxt').textContent = n ? `Ver mi pedido · ${plural(cart.length, 'producto', 'productos')}` : 'Ver mi pedido';
+    $('#floatTxt').textContent = n ? `Ver mi pedido · ${linesText()}` : 'Ver mi pedido';
     syncCards();
+    syncKits();
     if (quick.open) renderQuick(false);
     renderCart();
     renderPhone();
@@ -998,6 +1078,7 @@
         setPrices(map);
         store.set(PRICES_KEY, map);
         if (hasPrices !== had) renderGrid(); else syncCards();
+        renderKitDeals();
         if (quick.open) renderQuick(false);
         renderCart();
         renderPhone();
@@ -1009,6 +1090,7 @@
   setPrices(store.get(PRICES_KEY, null));
   renderChips();
   renderGrid();
+  renderKitDeals();
   onCartChange();
   fetchPrices();
 })();

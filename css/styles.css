@@ -648,27 +648,46 @@ main { overflow-x: clip; }
 .kit__para { font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; opacity: .85; }
 .kit__name { font-family: var(--f-display); font-weight: 900; font-stretch: 112%; font-size: 1.9rem; line-height: 1; letter-spacing: -.035em; margin: 8px 0 8px; }
 .kit__desc { font-size: .93rem; opacity: .88; max-width: 28ch; }
-.kit__thumbs { display: flex; margin: -50px 24px 0; position: relative; z-index: 2; }
+/* Las miniaturas se achican si el kit trae muchos productos, así nunca se cortan */
+.kit__thumbs { display: flex; align-items: flex-start; margin: -50px 24px 0; position: relative; z-index: 2; }
 .kit__thumbs span {
-  width: 78px; height: 78px; flex: none; border-radius: 50%; overflow: hidden;
+  flex: 0 1 78px; min-width: 0; aspect-ratio: 1; border-radius: 50%; overflow: hidden;
   background: #fff; border: 4px solid var(--paper);
   margin-right: -18px;
   box-shadow: 0 10px 18px -10px rgb(40 0 0 / .5);
   transition: transform .4s var(--spring);
 }
+.kit__thumbs span:last-child { margin-right: 0; }
 .kit:hover .kit__thumbs span { transform: translateY(-4px); }
 .kit:hover .kit__thumbs span:nth-child(2) { transition-delay: .03s; }
 .kit:hover .kit__thumbs span:nth-child(3) { transition-delay: .06s; }
 .kit:hover .kit__thumbs span:nth-child(4) { transition-delay: .09s; }
 .kit:hover .kit__thumbs span:nth-child(5) { transition-delay: .12s; }
+.kit:hover .kit__thumbs span:nth-child(6) { transition-delay: .15s; }
 .kit__thumbs img { width: 100%; height: 100%; object-fit: contain; transform: scale(1.45); mix-blend-mode: multiply; }
 .kit__thumbs .is-cover img { object-fit: cover; transform: none; mix-blend-mode: normal; }
 .kit__list { padding: 18px 24px 8px; display: grid; gap: 2px; }
 .kit__list li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1.5px dashed var(--line); font-size: .93rem; }
 .kit__list li:last-child { border-bottom: 0; }
 .kit__list span:last-child { color: var(--muted); font-weight: 600; white-space: nowrap; }
-.kit__foot { margin-top: auto; padding: 14px 24px 24px; }
-.kit__foot .btn { width: 100%; }
+.kit__foot { margin-top: auto; padding: 14px 24px 24px; display: grid; gap: 16px; }
+.kit__foot .btn-add, .kit__foot .stepper { height: 52px; font-size: 1rem; }
+.kit.in-cart { box-shadow: 0 0 0 2.5px var(--ink), 0 24px 40px -32px rgb(90 30 10 / .6); }
+
+/* Precio del kit: como el total de un ticket, con el ahorro en una etiqueta amarilla */
+.kit__deal { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 2px solid var(--ink); }
+.kit__deal:empty { display: none; }
+.kit__price { display: grid; gap: 3px; min-width: 0; }
+.kit__price small, .kit__save small { font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.kit__price b { font-family: var(--f-display); font-weight: 900; font-size: 1.75rem; line-height: 1; letter-spacing: -.035em; }
+.kit__price s, .kit__price span { font-size: .82rem; font-weight: 600; color: var(--muted); }
+.kit__save {
+  flex: none; display: grid; justify-items: center; gap: 1px;
+  padding: 8px 13px 7px; border-radius: 14px; rotate: -3deg;
+  background: var(--sun); color: var(--ink); box-shadow: 0 3px 0 var(--sun-shadow);
+}
+.kit__save small { color: var(--ink-2); letter-spacing: .1em; }
+.kit__save b { font-family: var(--f-display); font-weight: 900; font-size: 1.15rem; line-height: 1.1; letter-spacing: -.02em; }
 
 /* ─── Nosotros ─────────────────────────────────────────────────── */
 .why { background: var(--sun); overflow: hidden; isolation: isolate; }
@@ -1039,6 +1058,8 @@ dialog.is-closing::backdrop { animation: fade .25s ease reverse forwards; }
 .drawer__sum { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .drawer__sum span { color: var(--muted); font-weight: 600; font-size: .92rem; }
 .drawer__sum b { font-family: var(--f-display); font-weight: 850; font-size: 1.2rem; letter-spacing: -.02em; }
+.drawer__save { margin: -4px 0 14px; padding: 8px 12px; border-radius: 12px; background: var(--sun-soft); color: var(--ink); font-weight: 750; font-size: .86rem; text-align: center; }
+.drawer__save[hidden] { display: none; }
 .drawer__note { text-align: center; font-size: .78rem; color: var(--muted); margin-top: 12px; }
 
 .cart-empty, .cart-sent { display: grid; justify-items: center; text-align: center; gap: 12px; padding: 48px 8px; color: var(--ink-2); }
@@ -1061,6 +1082,13 @@ dialog.is-closing::backdrop { animation: fade .25s ease reverse forwards; }
 .cart-list__name { font-weight: 750; font-size: .97rem; line-height: 1.25; }
 .cart-list__meta { font-size: .82rem; color: var(--muted); font-weight: 600; margin-top: 3px; }
 .cart-list__meta b { color: var(--ink); }
+.cart-list__meta s { margin-left: 2px; }
+.cart-list__inc { font-size: .76rem; color: var(--muted); line-height: 1.35; margin-top: 4px; }
+/* Kit en el pedido: hasta 4 productos en cuadrícula */
+.cart-list__img--kit { display: grid; grid-template: 1fr 1fr / 1fr 1fr; gap: 2px; background: #fff; }
+.cart-list__img--kit span { min-width: 0; min-height: 0; overflow: hidden; }
+.cart-list__img--kit img { transform: scale(1.3); }
+.cart-list__img--kit .is-cover img { object-fit: cover; transform: none; mix-blend-mode: normal; }
 .cart-clear {
   display: inline-flex; align-items: center; gap: 6px; margin: 14px 0 0;
   border: 0; background: none; padding: 6px 0; cursor: pointer;
@@ -1193,7 +1221,7 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .hero__facts span { font-size: .74rem; display: block; line-height: 1.3; }
   .hero__stage { margin-bottom: 92px; }
   .tag { min-width: 0; width: 72%; left: 50%; translate: -50% 0; bottom: -24%; padding: 14px 14px 12px 28px; }
-  .kit__thumbs span { width: 62px; height: 62px; margin-right: -14px; border-width: 3px; }
+  .kit__thumbs span { flex-basis: 62px; margin-right: -14px; border-width: 3px; }
   .kit__thumbs { margin-top: -42px; }
   .kit__head { padding-bottom: 62px; }
   .tag__hole { left: 10px; top: 18px; }
