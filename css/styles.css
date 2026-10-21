@@ -142,6 +142,8 @@ main.page-in { animation: pageIn .45s var(--ease); }
 .icon-btn .ico { width: 22px; height: 22px; }
 .icon-btn--wa { background: var(--wa); border-color: var(--wa); color: #fff; }
 .icon-btn--wa:hover { background: var(--wa-dark); border-color: var(--wa-dark); }
+.icon-btn--ig { background: radial-gradient(circle at 30% 107%, #FDF497 0 5%, #FD5949 45%, #D6249F 60%, #285AEB 90%); border-color: transparent; color: #fff; }
+.icon-btn--ig:hover { background: radial-gradient(circle at 30% 107%, #FDF497 0 5%, #FD5949 45%, #D6249F 60%, #285AEB 90%); filter: brightness(1.08); }
 .icon-btn--light { color: #fff; border-color: rgb(255 255 255 / .35); }
 .icon-btn--light:hover { background: rgb(255 255 255 / .12); }
 
@@ -160,6 +162,8 @@ main.page-in { animation: pageIn .45s var(--ease); }
   background: var(--sun); box-shadow: 0 0 0 3px rgb(255 198 41 / .25);
 }
 .ticker b { color: var(--sun); margin-left: .5em; font-weight: 800; }
+.ticker a { color: inherit; text-decoration: none; }
+.ticker a:hover b { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ─── Navegación ───────────────────────────────────────────────── */
 .nav {
@@ -1179,6 +1183,8 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
 
 @media (max-width: 640px) {
   .ticker { font-size: .7rem; }
+  /* En el celular no entra en la barra: queda en la cinta, el menú y el pie */
+  .nav__ig { display: none; }
   .hero { padding-top: 40px; }
   .hero__ctas .btn { flex: 1 1 auto; }
   .hero__facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
