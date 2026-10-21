@@ -297,7 +297,9 @@ window.DONASOL = {
   ],
 
   /* Kits: combinaciones listas que se suman al pedido con un toque.
-     Cada ítem es [id del producto, tamaño, cantidad].
+     Cada ítem es [id del producto, tamaño, cantidad, texto].
+     cantidad   → puede ser una parte del paquete (0.5 = medio paquete).
+     texto      → opcional; reemplaza al tamaño en lo que se muestra.
      descuento → % menos que la suma de los precios base de sus productos.
                  El precio del kit se calcula solo y se redondea hacia abajo
                  a la decena, así sigue los cambios de precio del panel.
@@ -311,7 +313,7 @@ window.DONASOL = {
     {
       id: 'cocina', nombre: 'Cocina Profesional', para: 'Para gastronomía', descuento: 10,
       desc: 'Para restaurantes, rotiserías y cocinas que no paran nunca.',
-      items: [['detergente', '10 L', 1], ['desengrasante', '5 L', 1], ['alcohol-gel', '5 L', 1], ['rollo-cocina', 'Funda × 12 rollos', 1], ['guantes-amarillos', '10 pares', 1]]
+      items: [['detergente', '10 L', 1], ['desengrasante', '5 L', 1], ['alcohol-gel', '5 L', 1], ['rollo-cocina', 'Funda × 12 rollos', 1], ['guantes-amarillos', '10 pares', 0.5, '5 pares']]
     },
     {
       id: 'autos', nombre: 'Lavadero de Autos', para: 'Para talleres y lavaderos', descuento: 10,

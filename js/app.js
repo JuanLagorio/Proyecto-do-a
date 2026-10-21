@@ -35,7 +35,7 @@
   const kitItems = k => k.items.filter(([id, t]) => sizeOk(id, t));
   const kitSum = k => kitItems(k).reduce((a, [id, t, q]) => { const p = priceOf(id, t); return isNum(a) && isNum(p) ? a + p * (q || 1) : null; }, 0);
   const kitPrice = k => { const s = kitSum(k); return isNum(s) ? Math.floor(s * (1 - (k.descuento || 0) / 100) / 10) * 10 : null; };
-  const kitText = k => kitItems(k).map(([id, t, q]) => `${q > 1 ? q + ' × ' : ''}${byId[id].nombre} (${t})`).join(', ');
+  const kitText = k => kitItems(k).map(([id, t, q, txt]) => `${q > 1 ? q + ' × ' : ''}${byId[id].nombre} (${txt || t})`).join(', ');
 
   const store = {
     get(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } },
@@ -634,7 +634,7 @@
           ${items.map(([id]) => { const p = byId[id]; return `<span class="${p.cover ? 'is-cover' : ''}" style="background:${tintOf(p)}"><img src="${p.img}" alt="" loading="lazy"></span>`; }).join('')}
         </div>
         <ul class="kit__list">
-          ${items.map(([id, t, q]) => `<li><span>${q > 1 ? q + ' × ' : ''}${esc(byId[id].nombre)}</span><span>${esc(t)}</span></li>`).join('')}
+          ${items.map(([id, t, q, txt]) => `<li><span>${q > 1 ? q + ' × ' : ''}${esc(byId[id].nombre)}</span><span>${esc(txt || t)}</span></li>`).join('')}
         </ul>
         <div class="kit__foot">
           <div class="kit__deal"></div>
