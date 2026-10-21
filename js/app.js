@@ -649,8 +649,7 @@
     const sum = kitSum(k);
     const off = k.descuento || 0;
     if (isNum(pr) && pr < sum) {
-      return `<p class="kit__price"><small>Precio del kit</small><b>${money(pr)}</b><s>${money(sum)} por separado</s></p>
-        <p class="kit__save"><small>Ahorrás</small><b>${money(sum - pr)}</b></p>`;
+      return `<p class="kit__price"><small>Precio del kit</small><b>${money(pr)}</b><s>${money(sum)} por separado</s></p>`;
     }
     if (isNum(pr)) return `<p class="kit__price"><small>Precio del kit</small><b>${money(pr)}</b></p>`;
     return off ? `<p class="kit__price"><small>Precio del kit</small><b>${off} % menos</b><span>que comprando cada producto por separado</span></p>` : '';

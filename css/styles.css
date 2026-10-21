@@ -674,20 +674,13 @@ main { overflow-x: clip; }
 .kit__foot .btn-add, .kit__foot .stepper { height: 52px; font-size: 1rem; }
 .kit.in-cart { box-shadow: 0 0 0 2.5px var(--ink), 0 24px 40px -32px rgb(90 30 10 / .6); }
 
-/* Precio del kit: como el total de un ticket, con el ahorro en una etiqueta amarilla */
+/* Precio del kit: como el total de un ticket */
 .kit__deal { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 2px solid var(--ink); }
 .kit__deal:empty { display: none; }
 .kit__price { display: grid; gap: 3px; min-width: 0; }
-.kit__price small, .kit__save small { font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.kit__price small { font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .kit__price b { font-family: var(--f-display); font-weight: 900; font-size: 1.75rem; line-height: 1; letter-spacing: -.035em; }
 .kit__price s, .kit__price span { font-size: .82rem; font-weight: 600; color: var(--muted); }
-.kit__save {
-  flex: none; display: grid; justify-items: center; gap: 1px;
-  padding: 8px 13px 7px; border-radius: 14px; rotate: -3deg;
-  background: var(--sun); color: var(--ink); box-shadow: 0 3px 0 var(--sun-shadow);
-}
-.kit__save small { color: var(--ink-2); letter-spacing: .1em; }
-.kit__save b { font-family: var(--f-display); font-weight: 900; font-size: 1.15rem; line-height: 1.1; letter-spacing: -.02em; }
 
 /* ─── Nosotros ─────────────────────────────────────────────────── */
 .why { background: var(--sun); overflow: hidden; isolation: isolate; }
