@@ -152,6 +152,12 @@ window.DONASOL = {
       desc: 'Suaviza, desinfecta y perfuma delicadamente la ropa.',
       tamanos: [{ t: '5 L', clave: 'suavizante' }, { t: '10 L', clave: 'suavizante_10L' }]
     },
+    {
+      id: 'shampoo-lavarropas', cat: 'lavado', nombre: 'Shampoo para Lavarropas',
+      img: 'img/productos/shampoo-lavarropas.jpg',
+      desc: 'Resalta los colores de la ropa. Espuma controlada y perfume duradero.',
+      tamanos: [{ t: '5 L', clave: 'shampoo-lavarropas' }]
+    },
 
     /* ── Higiene ──────────────────────────────────────────── */
     {
