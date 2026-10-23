@@ -156,7 +156,7 @@ window.DONASOL = {
       id: 'shampoo-lavarropas', cat: 'lavado', nombre: 'Shampoo para Lavarropas',
       img: 'img/productos/shampoo-lavarropas.jpg',
       desc: 'Resalta los colores de la ropa. Espuma controlada y perfume duradero.',
-      tamanos: [{ t: '5 L', clave: 'shampoo-lavarropas' }]
+      tamanos: [{ t: '5 L', clave: 'shampoo-lavarropas' }, { t: '10 L', clave: 'shampoo-lavarropas_10L' }]
     },
 
     /* ── Higiene ──────────────────────────────────────────── */
