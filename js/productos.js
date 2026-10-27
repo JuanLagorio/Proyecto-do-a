@@ -141,7 +141,7 @@ window.DONASOL = {
       tamanos: [{ t: '10 L', clave: 'jabon-ropa' }]
     },
     {
-      id: 'jabon-liquido-economico', cat: 'lavado', nombre: 'Jabón Líquido Económico',
+      id: 'jabon-liquido-economico', cat: 'lavado', nombre: 'Detergente Líquido Económico',
       img: 'img/productos/jabon-liquido-economico.jpg',
       desc: 'La versión económica de nuestro Detergente Líquido. Neutro, para lavar platos y la limpieza de todos los días.',
       tamanos: [{ t: '10 L', clave: 'jabon-liquido-economico' }]
