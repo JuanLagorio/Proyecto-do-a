@@ -287,6 +287,8 @@ main.page-in { animation: pageIn .45s var(--ease); }
   position: relative;
   width: 100%; max-width: 560px; aspect-ratio: 1; justify-self: center;
   display: grid; place-items: center;
+  /* De costado pasa de producto (ver app.js); hacia abajo sigue siendo la página */
+  touch-action: pan-y pinch-zoom;
 }
 .hero__burst {
   position: absolute; left: 50%; top: 50%;
@@ -327,10 +329,12 @@ main.page-in { animation: pageIn .45s var(--ease); }
   filter: brightness(1.03) contrast(1.05);
   opacity: 0;
   transform: translateY(18%) scale(calc(var(--z, 1.3) * .86)) rotate(-8deg);
-  transition: opacity .55s var(--ease), transform .8s var(--ease);
+  transition: opacity .55s var(--ease), transform .8s var(--ease), translate .35s var(--ease);
 }
 .porthole img.is-on { opacity: 1; transform: translateY(2%) scale(var(--z, 1.3)); }
 .porthole img.is-off { opacity: 0; transform: translateY(-14%) scale(calc(var(--z, 1.3) * .9)) rotate(6deg); }
+.porthole img.is-peek { opacity: 1; transform: translateY(2%) scale(var(--z, 1.3)); }
+.porthole.is-drag img { transition: none; }
 
 .rotor {
   position: absolute; z-index: 2; top: 1%; right: -1%;

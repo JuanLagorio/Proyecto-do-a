@@ -753,6 +753,66 @@
     heroShow($$('button', heroDots).indexOf(b));
     heroPlay();
   });
+  /* Con el dedo: la foto lo sigue de costado y, al soltar, pasa de producto
+     o vuelve a su lugar. Lo vertical queda para el navegador (touch-action
+     en .hero__stage), así la página sigue bajando desde acá. */
+  let drag = null;
+  let settleTimer = null;
+
+  function heroSettle() {
+    clearTimeout(settleTimer);
+    porthole.classList.add('is-drag');
+    $$('img', porthole).forEach(im => {
+      im.style.translate = '';
+      im.classList.remove('is-peek');
+    });
+    void porthole.offsetWidth;
+    porthole.classList.remove('is-drag');
+  }
+
+  function heroDrag(dx) {
+    const imgs = $$('img', porthole);
+    const side = dx < 0 ? 1 : -1;
+    const peek = imgs[(hi + side + imgs.length) % imgs.length];
+    if (drag.peek && drag.peek !== peek) drag.peek.classList.remove('is-peek');
+    peek.classList.add('is-peek');
+    imgs[hi].style.translate = `${dx}px 0`;
+    peek.style.translate = `${dx + side * drag.gap}px 0`;
+    Object.assign(drag, { peek, side });
+  }
+
+  function heroRelease(go) {
+    const { peek, side, gap } = drag;
+    const cur = $$('img', porthole)[hi];
+    porthole.classList.remove('is-drag');
+    if (go) heroShow(hi + side);
+    cur.style.translate = go ? `${-side * gap}px 0` : '';
+    peek.style.translate = go ? '' : `${side * gap}px 0`;
+    settleTimer = setTimeout(heroSettle, 400);
+  }
+
+  stage.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' || drag || heroItems.length < 2) return;
+    drag = { id: e.pointerId, x: e.clientX, gap: porthole.clientWidth, peek: null };
+  });
+  stage.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.peek) {
+      if (Math.abs(dx) < 10) return;
+      heroSettle();
+      porthole.classList.add('is-drag');
+    }
+    heroDrag(dx);
+  });
+  const heroDrop = e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    if (drag.peek) heroRelease(e.type === 'pointerup' && Math.abs(e.clientX - drag.x) > 40);
+    drag = null;
+  };
+  stage.addEventListener('pointerup', heroDrop);
+  stage.addEventListener('pointercancel', heroDrop);
+
   $('#heroAdd').addEventListener('click', () => {
     const p = heroItems[hi];
     if (!p) return;
