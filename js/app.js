@@ -793,8 +793,17 @@
 
   stage.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' || drag || heroItems.length < 2) return;
-    drag = { id: e.pointerId, x: e.clientX, gap: porthole.clientWidth, peek: null };
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, gap: porthole.clientWidth, peek: null };
   });
+  /* El pulgar hace un arco: hacia un lado el gesto arranca casi vertical y el
+     navegador se lo llevaría como scroll. Decide el primer movimiento: si tiene
+     algo de costado es de la foto hasta soltar; si no, sigue bajando la página. */
+  stage.addEventListener('touchmove', e => {
+    if (!drag || e.touches.length > 1) return;
+    const t = e.touches[0];
+    if (drag.own == null) drag.own = Math.abs(t.clientX - drag.x) > Math.abs(t.clientY - drag.y) * .4;
+    if (drag.own && e.cancelable) e.preventDefault();
+  }, { passive: false });
   stage.addEventListener('pointermove', e => {
     if (!drag || e.pointerId !== drag.id) return;
     const dx = e.clientX - drag.x;

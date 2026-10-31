@@ -745,7 +745,10 @@ main { overflow-x: clip; }
   mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
 .logos__track { display: flex; width: max-content; animation: marquee 50s linear infinite; }
-.logos__belt:hover .logos__track { animation-play-state: paused; }
+/* Solo con mouse: en el celular el toque deja el :hover pegado y la cinta se frena */
+@media (hover: hover) and (pointer: fine) {
+  .logos__belt:hover .logos__track { animation-play-state: paused; }
+}
 .logos__list { display: flex; gap: 18px; padding: 8px 18px 28px 0; }
 .logos__list li {
   flex: none; width: 210px;
