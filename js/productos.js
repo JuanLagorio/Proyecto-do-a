@@ -64,7 +64,7 @@ window.DONASOL = {
       id: 'multiuso', cat: 'limpieza', nombre: 'Limpiador Multiuso',
       img: 'img/productos/multiuso.jpg',
       desc: 'Limpia, perfuma y desinfecta. Fragancia a manzana para pisos, paredes, azulejos, cerámicas y artefactos de baño.',
-      tamanos: [{ t: '5 L', clave: 'multiuso_5L' }, { t: '10 L', clave: 'multiuso_10L' }]
+      tamanos: [{ t: '5 L', clave: 'multiuso_5L' }]
     },
     {
       id: 'multiuso-citrico', cat: 'limpieza', nombre: 'Multiuso Cítrico',
