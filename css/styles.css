@@ -750,6 +750,12 @@ main { overflow-x: clip; }
 .kit__resale .is-win { background: #E2F1E5; border-color: #BFDCC6; }
 .kit__resale .is-win dt { color: var(--kit-verde); }
 .kit__resale .is-win dd { color: var(--kit-verde); }
+.kit__how {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 14px; border-radius: 14px; background: var(--cream); border: 1.5px dashed #D9C3A0;
+  font-size: .88rem; font-weight: 700; color: var(--ink); text-align: center;
+}
+.kit__how .ico { width: 1.15em; height: 1.15em; color: var(--red); }
 .kit__foot .btn-add, .kit__foot .stepper { height: 52px; font-size: 1rem; }
 .kit.in-cart { box-shadow: 0 0 0 2.5px var(--ink), 0 24px 40px -32px rgb(90 30 10 / .6); }
 

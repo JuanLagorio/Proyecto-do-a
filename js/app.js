@@ -660,6 +660,7 @@
         </div>
         <footer class="kit__foot">
           ${kitDealHTML(k)}
+          <p class="kit__how">${ICON('i-pin')} Por encargue o comprándolo en la fábrica</p>
           <div class="buy">${buyHTML(0, KIT_LABEL)}</div>
         </footer>
       </article>`;
