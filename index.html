@@ -19,7 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..900&family=Caveat:wght@600;700&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- ?v= : cambiarlo cada vez que se modifique el CSS o el JS, así los
        celulares no mezclan archivos nuevos con otros viejos guardados -->
-  <link rel="stylesheet" href="css/styles.css?v=20261120">
+  <link rel="stylesheet" href="css/styles.css?v=20261125">
 
   <script type="application/ld+json">
   {
@@ -94,6 +94,7 @@
       <li>Precios directos de fábrica</li>
       <li>Industria uruguaya</li>
       <li>Hogar · Comercio · Industria</li>
+      <li><a href="#kits">De a litro, en el local <b>Lauro Müller 2008</b></a></li>
       <li>Pedí por WhatsApp <b data-wa-number>092 747 716</b></li>
       <li><a href="https://www.instagram.com/donasolproductos/" target="_blank" rel="noopener">Seguinos en Instagram <b>@donasolproductos</b></a></li>
       <li>Lunes a viernes de 8 a 17 h</li>
@@ -103,6 +104,7 @@
       <li>Precios directos de fábrica</li>
       <li>Industria uruguaya</li>
       <li>Hogar · Comercio · Industria</li>
+      <li><a href="#kits" tabindex="-1">De a litro, en el local <b>Lauro Müller 2008</b></a></li>
       <li>Pedí por WhatsApp <b data-wa-number>092 747 716</b></li>
       <li><a href="https://www.instagram.com/donasolproductos/" target="_blank" rel="noopener" tabindex="-1">Seguinos en Instagram <b>@donasolproductos</b></a></li>
       <li>Lunes a viernes de 8 a 17 h</li>
@@ -346,6 +348,12 @@
       <p class="shop__intro">Sumá productos a tu pedido y envialo a nuestro WhatsApp con un toque. Te respondemos para confirmar <b>precio, disponibilidad y entrega</b>. Sin registrarte, sin pagar online.</p>
     </header>
 
+    <a class="liter-note" href="#kits">
+      <svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg>
+      <span><b>¿Lo necesitás de a litro?</b> Vení al local: hay botellas de 1 L y kits listos.</span>
+      <span class="liter-note__go">Ver kits <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></span>
+    </a>
+
     <div class="shop__bar" id="shopBar">
       <div class="chips" id="chips" role="group" aria-label="Filtrar por categoría"></div>
       <label class="search">
@@ -366,15 +374,43 @@
   </div>
 </section>
 
-<!-- ═══════════ Kits ═══════════ -->
+<!-- ═══════════ Kits de a litro ═══════════
+     Los kits y la recarga se editan en js/productos.js -->
 <section class="kits section section--first" id="kits" data-page="kits" data-title="Kits">
   <div class="wrap">
     <header class="sec-head" data-reveal>
-      <p class="kicker">Kits listos</p>
-      <h2 class="h2">¿No sabés por dónde<br>arrancar? Arrancá por acá.</h2>
-      <p class="sec-head__side">Combinaciones armadas para cada lugar, más baratas que comprar cada producto por separado. Las sumás con un toque.</p>
+      <p class="kicker">Kits de a litro</p>
+      <h2 class="h2">Vení al local y<br>llevate de a litro.</h2>
+      <p class="sec-head__side">En la tienda online van los bidones. Las botellas de 1 L están en la fábrica: vení a buscarlas o encargalas por WhatsApp.</p>
     </header>
+
+    <div class="visit" data-reveal>
+      <svg class="visit__sun" aria-hidden="true"><use href="#i-sun"/></svg>
+      <div class="visit__txt">
+        <p class="visit__kicker">Te esperamos en la fábrica</p>
+        <p class="visit__title">Lauro Müller 2008, Montevideo</p>
+        <p class="visit__hours"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg> Lunes a viernes de 8 a 17 h</p>
+      </div>
+      <div class="visit__btns">
+        <a class="btn btn--sun" href="https://www.google.com/maps/search/?api=1&amp;query=Lauro+M%C3%BCller+2008+Montevideo+Uruguay" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg> Cómo llegar</a>
+        <a class="btn btn--line" href="https://wa.me/59892747716" data-wa-kits target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-wa"/></svg> Encargar por WhatsApp</a>
+      </div>
+    </div>
+
     <div class="kits__grid" id="kitsGrid"></div>
+
+    <aside class="refill" data-reveal>
+      <span class="refill__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.6-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.6 4.5L20 16"/><path d="M20 20v-4h-4"/></svg>
+      </span>
+      <div class="refill__txt">
+        <p class="refill__kicker">Recarga en el local</p>
+        <h3 class="refill__title">Volvé con tu envase</h3>
+        <p>Traé tu botella Doña Sol de 1 L y te la llenamos con el mismo producto, un 30 % más barato que una nueva. <b>Cada 5 recargas, la sexta es gratis.</b></p>
+        <p class="refill__small">Solo botellas Doña Sol del mismo producto. Nunca botellas de bebida.</p>
+      </div>
+      <p class="refill__price" id="recargaPrice"></p>
+    </aside>
   </div>
 </section>
 
@@ -602,7 +638,7 @@
         <a href="#tienda" data-line-link="quimica">Química</a>
         <a href="#tienda" data-line-link="textil">Textil</a>
         <a href="#tienda" data-line-link="papeles">Papeles</a>
-        <a href="#kits">Kits listos</a>
+        <a href="#kits">Kits de a litro</a>
       </div>
       <div>
         <h4>Doña Sol</h4>
@@ -707,7 +743,7 @@
     <div class="cart-empty" id="cartEmpty">
       <svg class="cart-empty__sun" aria-hidden="true"><use href="#i-sun"/></svg>
       <p class="cart-empty__title">Tu pedido está vacío</p>
-      <p>Sumá productos desde la tienda o arrancá con un kit armado.</p>
+      <p>Sumá productos desde la tienda o encargá un kit de a litro.</p>
       <a href="#tienda" class="btn btn--red" data-close>Ver productos</a>
       <a href="#kits" class="btn btn--ghost" data-close>Ver kits</a>
     </div>
@@ -766,7 +802,7 @@
   </div>
 </dialog>
 
-<script src="js/productos.js?v=20261120"></script>
-<script src="js/app.js?v=20261120"></script>
+<script src="js/productos.js?v=20261125"></script>
+<script src="js/app.js?v=20261125"></script>
 </body>
 </html>

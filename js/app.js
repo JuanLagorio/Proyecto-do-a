@@ -30,12 +30,11 @@
   const priceOf = (id, t) => { const s = byId[id] && byId[id].tamanos.find(x => x.t === t); return s ? s.precio : null; };
   let hasPrices = false;
 
-  /* Kits: su precio es la suma de sus productos con el descuento, redondeada hacia abajo a la decena */
+  /* Kits de a litro: precio fijo, puesto en productos.js (esos tamaños no están en el panel) */
   const kitById = Object.fromEntries((D.kits || []).map(k => [k.id, k]));
-  const kitItems = k => k.items.filter(([id, t]) => sizeOk(id, t));
-  const kitSum = k => kitItems(k).reduce((a, [id, t, q]) => { const p = priceOf(id, t); return isNum(a) && isNum(p) ? a + p * (q || 1) : null; }, 0);
-  const kitPrice = k => { const s = kitSum(k); return isNum(s) ? Math.floor(s * (1 - (k.descuento || 0) / 100) / 10) * 10 : null; };
-  const kitText = k => kitItems(k).map(([id, t, q, txt]) => `${q > 1 ? q + ' × ' : ''}${byId[id].nombre} (${txt || t})`).join(', ');
+  const kitPrice = k => isNum(k.precio) ? k.precio : null;
+  const kitSum = k => isNum(k.porSeparado) ? k.porSeparado : null;
+  const kitText = k => k.incluye || (k.items || []).map(i => i[0]).join(', ');
 
   const store = {
     get(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } },
@@ -213,7 +212,7 @@
   };
   const gaKit = (k, q) => {
     const pr = kitPrice(k);
-    const item = { item_id: `kit-${k.id}`, item_name: `Kit ${k.nombre}`, item_category: 'Kits', quantity: q };
+    const item = { item_id: `kit-${k.id}`, item_name: k.nombre, item_category: 'Kits', quantity: q };
     if (isNum(pr)) item.price = pr;
     return item;
   };
@@ -289,7 +288,7 @@
   const CART_KEY = 'donasol.pedido.v1';
   const CLIENT_KEY = 'donasol.cliente.v1';
   /* Cada línea del pedido es un producto { id, t, q } o un kit { kit, q } */
-  const lineOk = i => i.kit ? !!kitById[i.kit] && kitItems(kitById[i.kit]).length > 0 : sizeOk(i.id, i.t);
+  const lineOk = i => i.kit ? !!kitById[i.kit] : sizeOk(i.id, i.t);
   const sameLine = (a, b) => a.kit || b.kit ? a.kit === b.kit : a.id === b.id && a.t === b.t;
   const linePrice = i => i.kit ? kitPrice(kitById[i.kit]) : priceOf(i.id, i.t);
 
@@ -308,7 +307,8 @@
   const kitSavings = (list = cart) => list.reduce((a, i) => {
     const k = i.kit && kitById[i.kit];
     const p = k && kitPrice(k);
-    return isNum(p) ? a + (kitSum(k) - p) * i.q : a;
+    const s = k && kitSum(k);
+    return isNum(p) && isNum(s) && s > p ? a + (s - p) * i.q : a;
   }, 0);
   // "1 kit + 2 productos"
   const linesText = (list = cart) => {
@@ -616,45 +616,65 @@
     }
   });
 
-  /* ─── Kits ───────────────────────────────────────────────────── */
+  /* ─── Kits de a litro ────────────────────────────────────────── */
   const kitsGrid = $('#kitsGrid');
-  const KIT_LABEL = 'Sumar kit a mi pedido';
-  const kitList = (D.kits || []).filter(k => kitItems(k).length);
+  const KIT_LABEL = 'Encargar este kit';
+  const ZONA = { rojo: 'var(--red)', naranja: 'var(--orange)', amarillo: 'var(--sun)', verde: 'var(--zona-verde)', azul: 'var(--zona-azul)' };
 
-  kitsGrid.innerHTML = kitList.map(k => {
-    const items = kitItems(k);
+  const kitContentHTML = k => k.cantidades
+    ? `<ul class="kit__counts">${k.cantidades.map(([n, nom]) => `<li><b>${n}</b><span>${esc(nom)}</span></li>`).join('')}</ul>`
+    : `<ul class="kit__list">${(k.items || []).map(([a, b, z]) => z
+        ? `<li class="is-zone" style="--zone:${ZONA[z] || 'var(--line)'}"><span>${esc(a)}</span><span>${esc(b)}</span></li>`
+        : `<li><span>${esc(a)} <small>1 L</small></span><span>${esc(b)}</span></li>`).join('')}</ul>`;
+
+  function kitDealHTML(k) {
+    if (isNum(k.reventa) && k.reventa > k.precio) {
+      return `<dl class="kit__resale">
+            <div><dt>Pagás la caja</dt><dd>${money(k.precio)}</dd></div>
+            <div><dt>La revendés a</dt><dd>${money(k.reventa)}</dd></div>
+            <div class="is-win"><dt>Ganás por caja</dt><dd>${money(k.reventa - k.precio)}</dd></div>
+          </dl>`;
+    }
+    const sum = kitSum(k);
+    return isNum(sum) && sum > k.precio ? `<p class="kit__deal">Por separado <s>${money(sum)}</s></p>` : '';
+  }
+
+  kitsGrid.innerHTML = (D.kits || []).map(k => {
+    const zonas = (k.items || []).map(i => i[2]).filter(Boolean);
     return `
-      <article class="kit" data-kit="${k.id}" data-reveal>
-        <div class="kit__head">
+      <article class="kit kc-${esc(k.color || 'rojo')}" data-kit="${esc(k.id)}" data-reveal>
+        <header class="kit__head">
           <p class="kit__para">${esc(k.para)}</p>
-          <h3 class="kit__name">Kit ${esc(k.nombre)}</h3>
+          <h3 class="kit__name">${esc(k.nombre)}</h3>
+          ${k.lema ? `<p class="kit__lema">${esc(k.lema)}</p>` : ''}
+          <p class="kit__seal">
+            <svg class="kit__rays" aria-hidden="true"><use href="#i-rays"/></svg>
+            <span><small>${esc(k.sello || 'Precio')}</small><b>${money(k.precio)}</b></span>
+          </p>
+        </header>
+        ${zonas.length ? `<div class="kit__stripe" aria-hidden="true">${zonas.map(z => `<i style="background:${ZONA[z]}"></i>`).join('')}</div>` : ''}
+        <div class="kit__body">
           <p class="kit__desc">${esc(k.desc)}</p>
+          ${kitContentHTML(k)}
+          ${k.nota ? `<p class="kit__note"><b>${esc(k.nota.titulo)}:</b> ${esc(k.nota.texto)}</p>` : ''}
         </div>
-        <div class="kit__thumbs" aria-hidden="true">
-          ${items.map(([id]) => { const p = byId[id]; return `<span class="${p.cover ? 'is-cover' : ''}" style="background:${tintOf(p)}"><img src="${p.img}" alt="" loading="lazy"></span>`; }).join('')}
-        </div>
-        <ul class="kit__list">
-          ${items.map(([id, t, q, txt]) => `<li><span>${q > 1 ? q + ' × ' : ''}${esc(byId[id].nombre)}</span><span>${esc(txt || t)}</span></li>`).join('')}
-        </ul>
-        <div class="kit__foot">
-          <div class="kit__deal"></div>
+        <footer class="kit__foot">
+          ${kitDealHTML(k)}
           <div class="buy">${buyHTML(0, KIT_LABEL)}</div>
-        </div>
+        </footer>
       </article>`;
   }).join('');
 
-  /* Precio del kit contra lo que sale por separado. Se rehace cuando llegan los precios. */
-  function kitDealHTML(k) {
-    const pr = kitPrice(k);
-    const sum = kitSum(k);
-    const off = k.descuento || 0;
-    if (isNum(pr) && pr < sum) {
-      return `<p class="kit__price"><small>Precio del kit</small><b>${money(pr)}</b><s>${money(sum)} por separado</s></p>`;
-    }
-    if (isNum(pr)) return `<p class="kit__price"><small>Precio del kit</small><b>${money(pr)}</b></p>`;
-    return off ? `<p class="kit__price"><small>Precio del kit</small><b>${off} % menos</b><span>que comprando cada producto por separado</span></p>` : '';
+  /* Recarga y botón de encargo por WhatsApp */
+  const R = D.recarga;
+  const recargaPrice = $('#recargaPrice');
+  if (recargaPrice && R && isNum(R.precio)) {
+    recargaPrice.innerHTML = `<small>${esc(R.producto)}</small><b>${money(R.precio)}</b>${isNum(R.nueva) ? `<span>en vez de ${money(R.nueva)}</span>` : ''}`;
+  } else if (recargaPrice) {
+    recargaPrice.hidden = true;
   }
-  const renderKitDeals = () => $$('.kit', kitsGrid).forEach(el => { $('.kit__deal', el).innerHTML = kitDealHTML(kitById[el.dataset.kit]); });
+  $$('[data-wa-kits]').forEach(a => { a.href = waUrl('¡Hola, Doña Sol! Quería encargar botellas de 1 L.'); });
+
   const syncKits = () => $$('.kit', kitsGrid).forEach(el => {
     const q = lineQty({ kit: el.dataset.kit });
     updateBuy($('.buy', el), q, KIT_LABEL);
@@ -667,13 +687,12 @@
     const el = b.closest('.kit');
     const k = kitById[el.dataset.kit];
     const line = { kit: k.id };
-    const first = byId[kitItems(k)[0][0]];
     switch (b.dataset.act) {
       case 'add':
         setLine(line, 1);
         track('agregar_kit', { kit: k.nombre });
-        flyFrom($('.kit__thumbs img', el), first);
-        toast(`Sumaste el <b>Kit ${esc(k.nombre)}</b>`, first);
+        flyFrom($('.kit__seal span', el), null, `<span class="flyer__kit kc-${esc(k.color || 'rojo')}">1 L</span>`);
+        toast(`Sumaste <b>${esc(k.nombre)}</b>`);
         focusIn($('.buy', el), 'inc');
         break;
       case 'inc':
@@ -834,8 +853,8 @@
 
   /* ─── Animación "vuela al carrito" ───────────────────────────── */
   const navCart = $('.cart-btn');
-  function flyFrom(imgEl, p) {
-    if (reduced || !imgEl || !p || !navCart.animate) return;
+  function flyFrom(imgEl, p, html) {
+    if (reduced || !imgEl || !(p || html) || !navCart.animate) return;
     const from = imgEl.getBoundingClientRect();
     const to = navCart.getBoundingClientRect();
     if (!from.width || !to.width) return;
@@ -844,7 +863,7 @@
     const fy = from.top + from.height / 2;
     const fly = document.createElement('div');
     fly.className = 'flyer';
-    fly.innerHTML = `<img src="${p.img}" alt="">`;
+    fly.innerHTML = html || `<img src="${p.img}" alt="">`;
     Object.assign(fly.style, { width: size + 'px', height: size + 'px', left: fx - size / 2 + 'px', top: fy - size / 2 + 'px' });
     document.body.appendChild(fly);
     const dx = to.left + to.width / 2 - fx;
@@ -908,18 +927,17 @@
     cartList.innerHTML = cart.map(i => {
       if (i.kit) {
         const k = kitById[i.kit];
-        const items = kitItems(k);
         const pr = kitPrice(k);
         const sum = kitSum(k);
         return `
-        <li data-kit="${k.id}">
-          <div class="cart-list__img cart-list__img--kit">${items.slice(0, 4).map(([id]) => { const p = byId[id]; return `<span class="${p.cover ? 'is-cover' : ''}" style="background:${tintOf(p)}"><img src="${p.img}" alt=""></span>`; }).join('')}</div>
+        <li data-kit="${esc(k.id)}">
+          <div class="cart-list__img cart-list__img--kit kc-${esc(k.color || 'rojo')}" aria-hidden="true"><b>1 L</b></div>
           <div>
-            <p class="cart-list__name">Kit ${esc(k.nombre)}</p>
-            <p class="cart-list__meta">${plural(items.length, 'producto', 'productos')}${isNum(pr) ? ` · <b>${money(pr * i.q)}</b>${pr < sum ? ` <s>${money(sum * i.q)}</s>` : ''}` : ''}</p>
+            <p class="cart-list__name">${esc(k.nombre)}</p>
+            <p class="cart-list__meta">Por encargue${isNum(pr) ? ` · <b>${money(pr * i.q)}</b>${isNum(sum) && pr < sum ? ` <s>${money(sum * i.q)}</s>` : ''}` : ''}</p>
             <p class="cart-list__inc">${esc(kitText(k))}</p>
           </div>
-          ${stepperHTML(i.q, `Kit ${k.nombre}`)}
+          ${stepperHTML(i.q, k.nombre)}
         </li>`;
       }
       const p = byId[i.id];
@@ -993,7 +1011,7 @@
       const cost = isNum(pr) ? ` — ${money(pr * i.q)}` : '';
       if (i.kit) {
         const k = kitById[i.kit];
-        L.push(`• ${i.q} × Kit ${k.nombre}${cost}`);
+        L.push(`• ${i.q} × ${k.nombre} (por encargue)${cost}`);
         L.push(`   Incluye: ${kitText(k)}`);
       } else {
         L.push(`• ${i.q} × ${byId[i.id].nombre} (${i.t})${cost}`);
@@ -1146,7 +1164,6 @@
         setPrices(map);
         store.set(PRICES_KEY, map);
         if (hasPrices !== had) renderGrid(); else syncCards();
-        renderKitDeals();
         if (quick.open) renderQuick(false);
         renderCart();
         renderPhone();
@@ -1158,7 +1175,6 @@
   setPrices(store.get(PRICES_KEY, null));
   renderChips();
   renderGrid();
-  renderKitDeals();
   onCartChange();
   fetchPrices();
 })();

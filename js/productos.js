@@ -308,31 +308,54 @@ window.DONASOL = {
     }
   ],
 
-  /* Kits: combinaciones listas que se suman al pedido con un toque.
-     Cada ítem es [id del producto, tamaño, cantidad, texto].
-     cantidad   → puede ser una parte del paquete (0.5 = medio paquete).
-     texto      → opcional; reemplaza al tamaño en lo que se muestra.
-     descuento → % menos que la suma de los precios base de sus productos.
-                 El precio del kit se calcula solo y se redondea hacia abajo
-                 a la decena, así sigue los cambios de precio del panel.
-                 Si a algún producto le falta precio, el kit queda a confirmar. */
+  /* Kits de a litro: botellas de 1 L que NO están en la tienda online
+     (ahí se venden bidones). Se compran en el local o se encargan por
+     WhatsApp: el botón de la tarjeta los suma al pedido.
+     Como esos tamaños no figuran en el panel, el precio va acá.
+     · color       → rojo, tinta, sol o verde (la cabeza de la tarjeta)
+     · sello       → texto chico arriba del precio, en el sello ("Precio")
+     · precio      → lo que sale el kit; porSeparado → opcional, se tacha
+     · items       → [producto, envase] o [zona, producto, color de la zona]
+     · cantidades  → en vez de items: [[cuántas, producto], …]
+     · reventa     → opcional, precio sugerido de reventa (kit para almacenes)
+     · nota        → recuadro opcional { titulo, texto }
+     · incluye     → cómo se lee el kit en el pedido de WhatsApp */
   kits: [
     {
-      id: 'casa', nombre: 'Casa Brillante', para: 'Para el hogar', descuento: 10,
-      desc: 'Lo básico para que la casa quede impecable de punta a punta.',
-      items: [['multiuso', '5 L', 1], ['lavandina', '10 L', 1], ['limpiavidrios', '2 L', 1], ['cremoso', '750 g', 1], ['rejillas', '6 u.', 1], ['panos-piso', '6 u.', 1]]
+      id: 'prueba', nombre: 'Kit Prueba', para: 'Para comercios', lema: 'Probá la fábrica', color: 'rojo',
+      precio: 590, porSeparado: 795,
+      desc: 'Cinco productos para probar en tu propio local sin comprar cinco bidones.',
+      items: [['Shampoo industrial', 'Gotita'], ['Lavandina', 'Bidón'], ['Desengrasante', 'Con gatillo'], ['Multiuso', 'Gotita'], ['Shampoo para manos', 'Con válvula']],
+      nota: { titulo: 'El vale', texto: 'si en 30 días comprás $ 2.000 o más por camión, te descontamos los $ 590. Solo para comercios.' },
+      incluye: 'shampoo industrial, lavandina, desengrasante, multiuso y shampoo para manos (1 L c/u)'
     },
     {
-      id: 'cocina', nombre: 'Cocina Profesional', para: 'Para gastronomía', descuento: 10,
-      desc: 'Para restaurantes, rotiserías y cocinas que no paran nunca.',
-      items: [['detergente', '10 L', 1], ['desengrasante', '5 L', 1], ['alcohol-gel', '5 L', 1], ['rollo-cocina', 'Funda × 12 rollos', 1], ['guantes-amarillos', '10 pares', 0.5, '5 pares']]
+      id: 'colores', nombre: 'Sistema 5 Colores', para: 'Ordená tu limpieza', lema: 'Un color para cada zona', color: 'tinta',
+      precio: 990, porSeparado: 1125,
+      desc: 'Cinco botellas de 1 L, cinco microfibras del mismo color y un cartel para la pared. Lo comprás una vez y después rellenás las botellas con nuestros bidones.',
+      items: [['Inodoros', 'Limpiador desinfectante', 'rojo'], ['Resto del baño', 'Desodorante bactericida', 'naranja'], ['Cocina', 'Desengrasante · con gatillo', 'amarillo'], ['Mesas y general', 'Multiuso', 'verde'], ['Vidrios y espejos', 'Limpiavidrios · con gatillo', 'azul']],
+      incluye: '5 botellas de 1 L (limpiador desinfectante, desodorante bactericida, desengrasante, multiuso y limpiavidrios), 5 microfibras y cartel'
     },
     {
-      id: 'autos', nombre: 'Lavadero de Autos', para: 'Para talleres y lavaderos', descuento: 10,
-      desc: 'Brillo, protección y buen aroma para cada vehículo que sale.',
-      items: [['emulsion-neumaticos', '5 L', 1], ['emulsion-plasticos', '5 L', 1], ['desengrasante', '5 L', 1], ['microfibras', '5 u.', 1], ['franelas', '6 u.', 1], ['perfumador', '½ L', 1]]
+      id: 'casa', nombre: 'Llevate uno para casa', para: 'Con tu compra', lema: '¿Y para tu casa?', color: 'sol',
+      precio: 590, porSeparado: 635,
+      desc: 'Cinco botellas de 1 L para la limpieza de tu casa, junto con la compra para tu comercio.',
+      items: [['Shampoo', 'Gotita'], ['Ideal Dúo', 'Gotita'], ['Multiuso', 'Gotita'], ['Lavandina', 'Bidón'], ['Desodorante bactericida', 'Gotita']],
+      nota: { titulo: 'Se suma a tu pedido', texto: 'va junto con una compra para tu comercio. El perfumador textil va aparte, a precio de lista.' },
+      incluye: 'shampoo, Ideal Dúo, multiuso, lavandina y desodorante bactericida (1 L c/u)'
+    },
+    {
+      id: 'gondola', nombre: 'Kit Góndola', para: 'Para almacenes y kioscos', lema: 'Doña Sol en tu estante', color: 'verde',
+      sello: 'La caja', precio: 1010, reventa: 1388,
+      desc: 'Doce botellas de 1 L y un exhibidor de cartón con el precio sugerido, que es el mismo de la fábrica. Siempre en envase Doña Sol.',
+      cantidades: [[4, 'Lavandina'], [4, 'Shampoo'], [2, 'Ideal Dúo'], [2, 'Multiuso']],
+      nota: { titulo: 'Desde 4 cajas', texto: 'pasás a precio de revendedor.' },
+      incluye: '4 lavandina, 4 shampoo, 2 Ideal Dúo y 2 multiuso (1 L c/u) con exhibidor'
     }
   ],
+
+  /* Recarga: el cliente trae su botella Doña Sol de 1 L al local */
+  recarga: { producto: 'Shampoo 1 L', precio: 69, nueva: 99 },
 
   /* Productos que giran en la portada */
   portada: ['multiuso', 'lavandina', 'limpiavidrios', 'cremoso', 'alcohol-gel', 'desengrasante']

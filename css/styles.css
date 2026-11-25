@@ -19,6 +19,9 @@
   --line: #EADBC1;
   --wa: #13934C;
   --wa-dark: #0B5E30;
+  --kit-verde: #1F5A3D;
+  --zona-verde: #2E9E4F;
+  --zona-azul: #1E6FD9;
 
   --tint-limpieza: #FFF3D9;
   --tint-lavado: #E9F1F6;
@@ -479,6 +482,20 @@ main { overflow-x: clip; }
 .shop__intro { color: var(--ink-2); font-size: 1.05rem; padding-bottom: 6px; }
 .shop__intro b { color: var(--ink); }
 
+/* Aviso: de a litro, solo en el local */
+.liter-note {
+  display: flex; align-items: center; gap: 12px; margin: -12px 0 22px;
+  padding: 12px 18px; border-radius: 16px;
+  background: var(--sun-soft); color: var(--ink); text-decoration: none; font-size: .93rem;
+  transition: background-color .2s;
+}
+.liter-note:hover { background: var(--sun); }
+.liter-note > .ico { color: var(--red); }
+.liter-note > span:first-of-type { flex: 1; min-width: 0; }
+.liter-note__go { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; white-space: nowrap; }
+.liter-note__go .ico { width: 1.1em; height: 1.1em; transition: translate .2s var(--ease); }
+.liter-note:hover .liter-note__go .ico { translate: 3px 0; }
+
 .shop__bar {
   position: sticky; top: calc(var(--nav-h) + 10px); z-index: 20;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -631,60 +648,130 @@ main { overflow-x: clip; }
 .ask__title { font-family: var(--f-display); font-weight: 850; font-size: 1.5rem; color: var(--ink); letter-spacing: -.02em; text-wrap: balance; }
 .ask .btn { margin-top: 12px; }
 
-/* ─── Kits ─────────────────────────────────────────────────────── */
+/* ─── Kits de a litro ──────────────────────────────────────────── */
 .kits { background: var(--kraft); }
-.kits__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+
+/* Color de cada kit: cabeza, sello y viñetas */
+.kc-rojo  { --kc: var(--red);       --kc-fg: #fff;       --kc-seal: var(--sun); --kc-seal-fg: var(--ink); --kc-dot: var(--red); }
+.kc-tinta { --kc: var(--ink);       --kc-fg: #fff;       --kc-seal: var(--sun); --kc-seal-fg: var(--ink); --kc-dot: var(--ink); }
+.kc-sol   { --kc: var(--sun);       --kc-fg: var(--ink); --kc-seal: var(--red); --kc-seal-fg: #fff;       --kc-dot: var(--sun-shadow); }
+.kc-verde { --kc: var(--kit-verde); --kc-fg: #fff;       --kc-seal: var(--sun); --kc-seal-fg: var(--ink); --kc-dot: var(--kit-verde); }
+
+/* Franja "Vení al local" */
+.visit {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px 26px;
+  padding: 24px 30px; border-radius: 28px;
+  background: var(--red); color: #fff;
+  box-shadow: 0 24px 40px -30px rgb(110 10 15 / .8);
+}
+.visit__sun { width: 84px; height: 84px; fill: var(--sun); animation: spin 24s linear infinite; }
+.visit__kicker { font-size: .74rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--sun); }
+.visit__title { font-family: var(--f-display); font-weight: 900; font-stretch: 110%; font-size: clamp(1.4rem, 1rem + 1.3vw, 2rem); line-height: 1.05; letter-spacing: -.03em; margin: 6px 0 8px; }
+.visit__hours { display: flex; align-items: center; gap: 8px; font-weight: 600; opacity: .92; }
+.visit__btns { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
+
+.kits__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; margin-top: 26px; }
 .kit {
   position: relative; display: flex; flex-direction: column;
   background: var(--paper); border-radius: 28px; overflow: hidden;
   box-shadow: 0 1px 0 rgb(255 255 255 / .6) inset, 0 24px 40px -32px rgb(90 30 10 / .6);
-  transition: transform .45s var(--ease);
+  transition: transform .45s var(--ease), box-shadow .3s;
 }
-.kit:hover { transform: translateY(-6px) rotate(-.4deg); }
-.kit__head { position: relative; padding: 24px 24px 74px; color: #fff; background: var(--red); overflow: hidden; }
-.kit:nth-child(2) .kit__head { background: var(--ink); }
-.kit:nth-child(3) .kit__head { background: var(--orange); color: var(--ink); }
-.kit__head::after {
-  content: ""; position: absolute; right: -60px; top: -60px; width: 200px; height: 200px;
-  background: repeating-conic-gradient(rgb(255 255 255 / .14) 0deg 8deg, transparent 8deg 20deg);
-  border-radius: 50%; animation: spin 50s linear infinite;
+.kit:hover { transform: translateY(-6px); }
+.kit__head {
+  position: relative; min-height: 172px; padding: 26px 156px 26px 28px;
+  background: var(--kc); color: var(--kc-fg); overflow: hidden;
 }
-.kit__para { font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; opacity: .85; }
-.kit__name { font-family: var(--f-display); font-weight: 900; font-stretch: 112%; font-size: 1.9rem; line-height: 1; letter-spacing: -.035em; margin: 8px 0 8px; }
-.kit__desc { font-size: .93rem; opacity: .88; max-width: 28ch; }
-/* Las miniaturas se achican si el kit trae muchos productos, así nunca se cortan */
-.kit__thumbs { display: flex; align-items: flex-start; margin: -50px 24px 0; position: relative; z-index: 2; }
-.kit__thumbs span {
-  flex: 0 1 78px; min-width: 0; aspect-ratio: 1; border-radius: 50%; overflow: hidden;
-  background: #fff; border: 4px solid var(--paper);
-  margin-right: -18px;
-  box-shadow: 0 10px 18px -10px rgb(40 0 0 / .5);
-  transition: transform .4s var(--spring);
+.kit__head::before {
+  content: ""; position: absolute; left: -90px; bottom: -150px; width: 280px; height: 280px; border-radius: 50%;
+  background: repeating-conic-gradient(rgb(255 255 255 / .09) 0deg 8deg, transparent 8deg 20deg);
 }
-.kit__thumbs span:last-child { margin-right: 0; }
-.kit:hover .kit__thumbs span { transform: translateY(-4px); }
-.kit:hover .kit__thumbs span:nth-child(2) { transition-delay: .03s; }
-.kit:hover .kit__thumbs span:nth-child(3) { transition-delay: .06s; }
-.kit:hover .kit__thumbs span:nth-child(4) { transition-delay: .09s; }
-.kit:hover .kit__thumbs span:nth-child(5) { transition-delay: .12s; }
-.kit:hover .kit__thumbs span:nth-child(6) { transition-delay: .15s; }
-.kit__thumbs img { width: 100%; height: 100%; object-fit: contain; transform: scale(1.45); mix-blend-mode: multiply; }
-.kit__thumbs .is-cover img { object-fit: cover; transform: none; mix-blend-mode: normal; }
-.kit__list { padding: 18px 24px 8px; display: grid; gap: 2px; }
-.kit__list li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1.5px dashed var(--line); font-size: .93rem; }
+.kc-sol .kit__head::before { background: repeating-conic-gradient(rgb(255 255 255 / .3) 0deg 8deg, transparent 8deg 20deg); }
+.kit__para {
+  position: relative; display: inline-block; padding: 6px 12px; border-radius: 999px;
+  background: rgb(0 0 0 / .22); font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+}
+.kc-sol .kit__para { background: var(--ink); color: var(--sun); }
+.kit__name {
+  position: relative; margin: 14px 0 6px;
+  font-family: var(--f-display); font-weight: 900; font-stretch: 112%;
+  font-size: clamp(1.7rem, 1.2rem + 1.1vw, 2.25rem); line-height: 1; letter-spacing: -.035em; text-wrap: balance;
+}
+.kit__lema { position: relative; font-family: var(--f-hand); font-size: 1.5rem; font-weight: 700; line-height: 1.05; }
+
+/* Sello del precio: un sol que gira detrás */
+.kit__seal { position: absolute; right: 22px; top: 50%; translate: 0 -50%; width: 120px; height: 120px; display: grid; place-items: center; }
+.kit__rays { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--kc-seal); animation: spin 30s linear infinite; }
+.kit__seal span {
+  position: relative; width: 88px; height: 88px; border-radius: 50%;
+  display: grid; place-content: center; text-align: center;
+  background: var(--kc-seal); color: var(--kc-seal-fg);
+  box-shadow: 0 8px 18px -8px rgb(0 0 0 / .45);
+  rotate: -8deg; transition: rotate .5s var(--spring), scale .5s var(--spring);
+}
+.kit:hover .kit__seal span { rotate: 0deg; scale: 1.06; }
+.kit__seal small { font-size: .6rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.kit__seal b { font-family: var(--f-display); font-weight: 900; font-size: 1.45rem; line-height: 1.05; letter-spacing: -.03em; white-space: nowrap; }
+
+/* Los cinco colores del Sistema 5 Colores */
+.kit__stripe { display: flex; height: 8px; }
+.kit__stripe i { flex: 1; }
+
+.kit__body { padding: 22px 28px 4px; display: grid; gap: 16px; align-content: start; }
+.kit__desc { color: var(--ink-2); font-size: .95rem; }
+.kit__list li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1.5px dashed var(--line); font-size: .95rem; }
 .kit__list li:last-child { border-bottom: 0; }
-.kit__list span:last-child { color: var(--muted); font-weight: 600; white-space: nowrap; }
-.kit__foot { margin-top: auto; padding: 14px 24px 24px; display: grid; gap: 16px; }
+.kit__list li::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--kc-dot); }
+.kit__list li.is-zone::before { width: 16px; height: 16px; border-radius: 5px; background: var(--zone); }
+.kit__list span:first-of-type { flex: 1; min-width: 0; font-weight: 700; }
+.kit__list span + span { color: var(--muted); font-weight: 600; font-size: .86rem; text-align: right; }
+.kit__list small {
+  display: inline-block; margin-left: 4px; padding: 1px 7px; border-radius: 999px; vertical-align: 1px;
+  background: var(--cream); border: 1px solid var(--line); font-size: .72rem; font-weight: 800; color: var(--ink-2);
+}
+.kit__counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.kit__counts li {
+  display: grid; justify-items: center; align-content: start; gap: 6px; padding: 22px 6px 18px;
+  border-radius: 16px; background: var(--cream); border: 1.5px solid var(--line); text-align: center;
+}
+.kit__counts b { font-family: var(--f-display); font-weight: 900; font-size: 2.5rem; line-height: 1; color: var(--kc); }
+.kit__counts span { font-size: .8rem; font-weight: 700; color: var(--ink-2); line-height: 1.2; }
+.kit__note { padding: 12px 16px; border-radius: 14px; background: #FFF1CC; border: 1.5px solid #F2D88C; font-size: .88rem; color: var(--ink-2); }
+.kit__note b { color: var(--ink); }
+
+.kit__foot { margin-top: auto; padding: 16px 28px 26px; display: grid; gap: 14px; }
+.kit__deal { padding-top: 14px; border-top: 2px solid var(--ink); font-size: .9rem; font-weight: 600; color: var(--muted); }
+.kit__deal s { margin-left: 4px; font-weight: 800; color: var(--ink-2); }
+/* Kit para almacenes: cuánto paga, a cuánto lo revende y cuánto gana */
+.kit__resale { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.kit__resale div { padding: 14px 14px 12px; border-radius: 14px; background: var(--cream); border: 1.5px solid var(--line); }
+.kit__resale dt { font-size: .66rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.kit__resale dd { margin: 6px 0 0; font-family: var(--f-display); font-weight: 900; font-size: 1.45rem; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
+.kit__resale .is-win { background: #E2F1E5; border-color: #BFDCC6; }
+.kit__resale .is-win dt { color: var(--kit-verde); }
+.kit__resale .is-win dd { color: var(--kit-verde); }
 .kit__foot .btn-add, .kit__foot .stepper { height: 52px; font-size: 1rem; }
 .kit.in-cart { box-shadow: 0 0 0 2.5px var(--ink), 0 24px 40px -32px rgb(90 30 10 / .6); }
 
-/* Precio del kit: como el total de un ticket */
-.kit__deal { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 2px solid var(--ink); }
-.kit__deal:empty { display: none; }
-.kit__price { display: grid; gap: 3px; min-width: 0; }
-.kit__price small { font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.kit__price b { font-family: var(--f-display); font-weight: 900; font-size: 1.75rem; line-height: 1; letter-spacing: -.035em; }
-.kit__price s, .kit__price span { font-size: .82rem; font-weight: 600; color: var(--muted); }
+/* Recarga: "Volvé con tu envase" */
+.refill {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px 26px;
+  margin-top: 26px; padding: 26px 30px; border-radius: 28px;
+  background: var(--paper); border: 2px dashed #D9C3A0;
+}
+.refill__icon { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--sun); }
+.refill__icon svg { width: 38px; height: 38px; transition: rotate .7s var(--spring); }
+.refill:hover .refill__icon svg { rotate: 180deg; }
+.refill__kicker { font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--red); }
+.refill__title { font-family: var(--f-display); font-weight: 900; font-stretch: 110%; font-size: clamp(1.5rem, 1.2rem + .8vw, 1.9rem); line-height: 1; letter-spacing: -.03em; margin: 6px 0 8px; }
+.refill__txt > p:not([class]) { color: var(--ink-2); font-size: .95rem; max-width: 62ch; }
+.refill__txt b { color: var(--ink); }
+.refill__small { margin-top: 6px; font-size: .8rem; color: var(--muted); }
+.refill__price { display: grid; justify-items: center; gap: 4px; min-width: 150px; padding: 16px 20px; border-radius: 20px; background: var(--sun); text-align: center; }
+.refill__price[hidden] { display: none; }
+.refill__price small { font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.refill__price b { font-family: var(--f-display); font-weight: 900; font-size: 2.3rem; line-height: 1; letter-spacing: -.03em; }
+.refill__price span { font-size: .82rem; font-weight: 700; color: var(--ink-2); }
 
 /* ─── Nosotros ─────────────────────────────────────────────────── */
 .why { background: var(--sun); overflow: hidden; isolation: isolate; }
@@ -975,6 +1062,11 @@ body[data-page="tienda"] .foot__cols { padding-top: 0; }
   box-shadow: 0 10px 30px -6px rgb(0 0 0 / .35);
 }
 .flyer img { width: 100%; height: 100%; object-fit: contain; transform: scale(1.3); }
+.flyer__kit {
+  display: grid; place-items: center; width: 100%; height: 100%;
+  background: var(--kc-seal); color: var(--kc-seal-fg);
+  font-family: var(--f-display); font-weight: 900; font-size: 1.4rem;
+}
 
 /* ─── Diálogos (base) ──────────────────────────────────────────── */
 dialog { border: 0; padding: 0; color: var(--ink); }
@@ -1086,11 +1178,9 @@ dialog.is-closing::backdrop { animation: fade .25s ease reverse forwards; }
 .cart-list__meta b { color: var(--ink); }
 .cart-list__meta s { margin-left: 2px; }
 .cart-list__inc { font-size: .76rem; color: var(--muted); line-height: 1.35; margin-top: 4px; }
-/* Kit en el pedido: hasta 4 productos en cuadrícula */
-.cart-list__img--kit { display: grid; grid-template: 1fr 1fr / 1fr 1fr; gap: 2px; background: #fff; }
-.cart-list__img--kit span { min-width: 0; min-height: 0; overflow: hidden; }
-.cart-list__img--kit img { transform: scale(1.3); }
-.cart-list__img--kit .is-cover img { object-fit: cover; transform: none; mix-blend-mode: normal; }
+/* Kit de a litro en el pedido: un recuadro del color del kit */
+.cart-list__img--kit { display: grid; place-items: center; background: var(--kc); color: var(--kc-fg); }
+.cart-list__img--kit b { font-family: var(--f-display); font-weight: 900; font-size: 1.2rem; letter-spacing: -.02em; }
 .cart-clear {
   display: inline-flex; align-items: center; gap: 6px; margin: 14px 0 0;
   border: 0; background: none; padding: 6px 0; cursor: pointer;
@@ -1195,7 +1285,11 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .lines__grid::-webkit-scrollbar { display: none; }
   .line { scroll-snap-align: start; min-height: 500px; }
 
-  .kits__grid { grid-template-columns: 1fr; max-width: 560px; }
+  .visit { grid-template-columns: auto minmax(0, 1fr); }
+  .visit__btns { grid-column: 1 / -1; justify-content: flex-start; }
+  .refill { grid-template-columns: auto minmax(0, 1fr); }
+  .refill__price { grid-column: 1 / -1; justify-self: start; grid-template-columns: auto auto auto; align-items: baseline; gap: 10px; min-width: 0; padding: 12px 18px; }
+  .refill__price b { font-size: 1.8rem; }
   .why__grid, .how__grid, .faq__grid, .contact__grid { grid-template-columns: 1fr; }
   .why__media { max-width: 520px; }
   .clients__grid { --cols: 3; --gap: 14px; }
@@ -1211,6 +1305,10 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .foot__cols > div:last-child { grid-column: 1 / -1; }
 }
 
+@media (max-width: 860px) {
+  .kits__grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 640px) {
   .ticker { font-size: .7rem; }
   /* En el celular no entra en la barra: queda en la cinta, el menú y el pie */
@@ -1223,9 +1321,32 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .hero__facts span { font-size: .74rem; display: block; line-height: 1.3; }
   .hero__stage { margin-bottom: 92px; }
   .tag { min-width: 0; width: 72%; left: 50%; translate: -50% 0; bottom: -24%; padding: 14px 14px 12px 28px; }
-  .kit__thumbs span { flex-basis: 62px; margin-right: -14px; border-width: 3px; }
-  .kit__thumbs { margin-top: -42px; }
-  .kit__head { padding-bottom: 62px; }
+  .visit { padding: 22px 20px; gap: 14px 16px; }
+  .visit__sun { width: 56px; height: 56px; }
+  .visit__btns .btn { flex: 1 1 auto; }
+  .kit__head { min-height: 150px; padding: 22px 112px 22px 20px; }
+  .kit__seal { right: 10px; width: 96px; height: 96px; }
+  .kit__seal span { width: 70px; height: 70px; }
+  .kit__seal small { font-size: .5rem; }
+  .kit__seal b { font-size: 1.12rem; }
+  .kit__lema { font-size: 1.3rem; }
+  .kit__body { padding: 18px 20px 4px; }
+  .kit__foot { padding: 14px 20px 22px; }
+  .kit__list li { align-items: flex-start; }
+  .kit__list li::before { margin-top: .5em; }
+  .kit__list li.is-zone::before { margin-top: .2em; }
+  .kit__counts { gap: 6px; }
+  .kit__counts li { padding: 12px 4px 10px; }
+  .kit__counts b { font-size: 1.9rem; }
+  .kit__counts span { font-size: .72rem; }
+  .kit__resale { gap: 6px; }
+  .kit__resale div { padding: 10px 8px; }
+  .kit__resale dt { font-size: .56rem; letter-spacing: .06em; }
+  .kit__resale dd { font-size: 1.1rem; }
+  .refill { padding: 22px 20px; gap: 14px 16px; align-items: start; }
+  .refill__icon { width: 56px; height: 56px; }
+  .refill__icon svg { width: 28px; height: 28px; }
+  .liter-note { flex-wrap: wrap; margin-top: -8px; }
   .tag__hole { left: 10px; top: 18px; }
   .tag__name { font-size: 1.05rem; }
   .hero__note { font-size: 1.4rem; top: 0; }
