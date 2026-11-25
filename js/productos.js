@@ -321,7 +321,7 @@ window.DONASOL = {
      · incluye     → cómo se lee el kit en el pedido de WhatsApp */
   kits: [
     {
-      id: 'prueba', nombre: 'Kit Prueba', para: 'Para comercios', lema: 'Probá la fábrica', color: 'rojo',
+      id: 'prueba', nombre: 'Kit Prueba', para: 'Para comercios o hogares', lema: 'Probá la fábrica', color: 'rojo',
       precio: 590, porSeparado: 795,
       desc: 'Cinco productos de 1 L para probar en tu comercio o hogar. Si después pedís $ 2.000 o más con reparto, te lo descontamos.',
       items: ['Detergente', 'Lavandina', 'Desengrasante', 'Multiuso', 'Jabón de manos'],
