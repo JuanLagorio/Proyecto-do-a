@@ -315,7 +315,7 @@ window.DONASOL = {
      · color       → rojo, tinta, sol o verde (la cabeza de la tarjeta)
      · sello       → texto chico arriba del precio, en el sello ("Precio")
      · precio      → lo que sale el kit; porSeparado → opcional, se tacha
-     · items       → [producto, envase] o [zona, producto, color de la zona]
+     · items       → 'producto' o [zona, producto, color de la zona]
      · cantidades  → en vez de items: [[cuántas, producto], …]
      · nota        → recuadro opcional { titulo, texto }
      · incluye     → cómo se lee el kit en el pedido de WhatsApp */
@@ -324,21 +324,21 @@ window.DONASOL = {
       id: 'prueba', nombre: 'Kit Prueba', para: 'Para comercios', lema: 'Probá la fábrica', color: 'rojo',
       precio: 590, porSeparado: 795,
       desc: 'Cinco productos de 1 L para probar en tu comercio o hogar. Si después pedís $ 2.000 o más con reparto, te lo descontamos.',
-      items: [['Detergente', 'Gotita'], ['Lavandina', 'Bidón'], ['Desengrasante', 'Con gatillo'], ['Multiuso', 'Gotita'], ['Jabón de manos', 'Con válvula']],
+      items: ['Detergente', 'Lavandina', 'Desengrasante', 'Multiuso', 'Jabón de manos'],
       incluye: 'detergente, lavandina, desengrasante, multiuso y jabón de manos (1 L c/u)'
     },
     {
       id: 'colores', nombre: 'Sistema 5 Colores', para: 'Ordená tu limpieza', lema: 'Un color para cada zona', color: 'tinta',
       precio: 990, porSeparado: 1125,
       desc: 'Un color por zona: nadie limpia la cocina con el paño del baño. Trae 5 productos de 1 L y 5 microfibras.',
-      items: [['Inodoros', 'Limpiador desinfectante', 'rojo'], ['Resto del baño', 'Desodorante bactericida', 'naranja'], ['Cocina', 'Desengrasante · con gatillo', 'amarillo'], ['Mesas y general', 'Multiuso', 'verde'], ['Vidrios y espejos', 'Limpiavidrios · con gatillo', 'azul']],
+      items: [['Inodoros', 'Limpiador desinfectante', 'rojo'], ['Resto del baño', 'Desodorante bactericida', 'naranja'], ['Cocina', 'Desengrasante', 'amarillo'], ['Mesas y general', 'Multiuso', 'verde'], ['Vidrios y espejos', 'Limpiavidrios', 'azul']],
       incluye: '5 botellas de 1 L (limpiador desinfectante, desodorante bactericida, desengrasante, multiuso y limpiavidrios), 5 microfibras y cartel'
     },
     {
       id: 'casa', nombre: 'Llevate uno para casa', para: 'Con tu compra', lema: '¿Y para tu casa?', color: 'sol',
       precio: 590, porSeparado: 635,
       desc: 'Lo de tu casa a precio de fábrica: detergente, Ideal Dúo, multiuso, lavandina y desodorante.',
-      items: [['Detergente', 'Gotita'], ['Ideal Dúo', 'Gotita'], ['Multiuso', 'Gotita'], ['Lavandina', 'Bidón'], ['Desodorante bactericida', 'Gotita']],
+      items: ['Detergente', 'Ideal Dúo', 'Multiuso', 'Lavandina', 'Desodorante bactericida'],
       incluye: 'detergente, Ideal Dúo, multiuso, lavandina y desodorante bactericida (1 L c/u)'
     },
     {

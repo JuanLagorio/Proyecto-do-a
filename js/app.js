@@ -34,7 +34,7 @@
   const kitById = Object.fromEntries((D.kits || []).map(k => [k.id, k]));
   const kitPrice = k => isNum(k.precio) ? k.precio : null;
   const kitSum = k => isNum(k.porSeparado) ? k.porSeparado : null;
-  const kitText = k => k.incluye || (k.items || []).map(i => i[0]).join(', ');
+  const kitText = k => k.incluye || (k.items || []).map(i => Array.isArray(i) ? i[1] : i).join(', ');
 
   const store = {
     get(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } },
@@ -623,9 +623,9 @@
 
   const kitContentHTML = k => k.cantidades
     ? `<ul class="kit__counts">${k.cantidades.map(([n, nom]) => `<li><b>${n}</b><span>${esc(nom)}</span></li>`).join('')}</ul>`
-    : `<ul class="kit__list">${(k.items || []).map(([a, b, z]) => z
-        ? `<li class="is-zone" style="--zone:${ZONA[z] || 'var(--line)'}"><span>${esc(a)}</span><span>${esc(b)}</span></li>`
-        : `<li><span>${esc(a)} <small>1 L</small></span><span>${esc(b)}</span></li>`).join('')}</ul>`;
+    : `<ul class="kit__list">${(k.items || []).map(it => Array.isArray(it)
+        ? `<li class="is-zone" style="--zone:${ZONA[it[2]] || 'var(--line)'}"><span>${esc(it[0])}</span><span>${esc(it[1])}</span></li>`
+        : `<li><span>${esc(it)} <small>1 L</small></span></li>`).join('')}</ul>`;
 
   function kitDealHTML(k) {
     const sum = kitSum(k);
@@ -633,7 +633,7 @@
   }
 
   kitsGrid.innerHTML = (D.kits || []).map(k => {
-    const zonas = (k.items || []).map(i => i[2]).filter(Boolean);
+    const zonas = (k.items || []).filter(Array.isArray).map(i => i[2]).filter(Boolean);
     return `
       <article class="kit kc-${esc(k.color || 'rojo')}" data-kit="${esc(k.id)}" data-reveal>
         <header class="kit__head">
