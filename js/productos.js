@@ -326,7 +326,6 @@ window.DONASOL = {
       precio: 590, porSeparado: 795,
       desc: 'Cinco productos para probar en tu propio local sin comprar cinco bidones.',
       items: [['Shampoo industrial', 'Gotita'], ['Lavandina', 'Bidón'], ['Desengrasante', 'Con gatillo'], ['Multiuso', 'Gotita'], ['Shampoo para manos', 'Con válvula']],
-      nota: { titulo: 'El vale', texto: 'si en 30 días comprás $ 2.000 o más por camión, te descontamos los $ 590. Solo para comercios.' },
       incluye: 'shampoo industrial, lavandina, desengrasante, multiuso y shampoo para manos (1 L c/u)'
     },
     {
@@ -341,7 +340,6 @@ window.DONASOL = {
       precio: 590, porSeparado: 635,
       desc: 'Cinco botellas de 1 L para la limpieza de tu casa, junto con la compra para tu comercio.',
       items: [['Shampoo', 'Gotita'], ['Ideal Dúo', 'Gotita'], ['Multiuso', 'Gotita'], ['Lavandina', 'Bidón'], ['Desodorante bactericida', 'Gotita']],
-      nota: { titulo: 'Se suma a tu pedido', texto: 'va junto con una compra para tu comercio. El perfumador textil va aparte, a precio de lista.' },
       incluye: 'shampoo, Ideal Dúo, multiuso, lavandina y desodorante bactericida (1 L c/u)'
     },
     {
@@ -349,7 +347,6 @@ window.DONASOL = {
       sello: 'La caja', precio: 1010, reventa: 1388,
       desc: 'Doce botellas de 1 L y un exhibidor de cartón con el precio sugerido, que es el mismo de la fábrica. Siempre en envase Doña Sol.',
       cantidades: [[4, 'Lavandina'], [4, 'Shampoo'], [2, 'Ideal Dúo'], [2, 'Multiuso']],
-      nota: { titulo: 'Desde 4 cajas', texto: 'pasás a precio de revendedor.' },
       incluye: '4 lavandina, 4 shampoo, 2 Ideal Dúo y 2 multiuso (1 L c/u) con exhibidor'
     }
   ],
