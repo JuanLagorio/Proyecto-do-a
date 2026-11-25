@@ -318,6 +318,9 @@ window.DONASOL = {
      · desc        → opcional, texto debajo de la cabeza
      · items       → 'producto' o [zona, producto, color de la zona]
      · cantidades  → en vez de items: [[cuántas, producto], …]
+     · combo       → en vez de items: ids de otros kits que se venden juntos.
+                     Ocupa todo el ancho; si no tiene porSeparado, se suma
+                     el de esos kits.
      · nota        → recuadro opcional { titulo, texto }
      · incluye     → cómo se lee el kit en el pedido de WhatsApp */
   kits: [
@@ -329,18 +332,24 @@ window.DONASOL = {
       incluye: 'detergente, desengrasante, multiuso y lavandina (1 L c/u)'
     },
     {
-      id: 'colores', nombre: 'Sistema 5 Colores', para: 'Ordená tu limpieza', lema: 'Un color para cada zona', color: 'tinta',
-      precio: 990, porSeparado: 1125,
-      desc: 'Un color por zona: nadie limpia la cocina con el paño del baño. Trae 5 productos de 1 L y 5 microfibras.',
-      items: [['Inodoros', 'Limpiador desinfectante', 'rojo'], ['Resto del baño', 'Desodorante bactericida', 'naranja'], ['Cocina', 'Desengrasante', 'amarillo'], ['Mesas y general', 'Multiuso', 'verde'], ['Vidrios y espejos', 'Limpiavidrios', 'azul']],
-      incluye: '5 botellas de 1 L (limpiador desinfectante, desodorante bactericida, desengrasante, multiuso y limpiavidrios), 5 microfibras y cartel'
-    },
-    {
       id: 'bano-ropa', nombre: 'Kit Baño y Ropa', para: 'Para el baño y la ropa', lema: 'Cuatro productos de 1 L', color: 'sol',
       precio: 590, porSeparado: 706,
       desc: 'Baño desinfectado y perfumado, y ropa limpia en un solo kit: jabón que cuida tus manos, limpiador desinfectante, desodorante bactericida e Ideal Dúo, que lava y suaviza a la vez.',
       items: ['Jabón de manos', 'Limpiador desinfectante', 'Desodorante bactericida', 'Ideal Dúo'],
       incluye: 'jabón de manos, limpiador desinfectante, desodorante bactericida e Ideal Dúo (1 L c/u)'
+    },
+    {
+      id: 'los-dos', nombre: 'Los dos: Cocina + Baño y Ropa', para: 'Llevá los dos', lema: 'Ocho productos de 1 L', color: 'rojo',
+      precio: 950,
+      desc: 'Cocina, baño y ropa resueltos de una vez: el Kit Cocina y el Kit Baño y Ropa juntos, a mejor precio.',
+      combo: ['cocina', 'bano-ropa']
+    },
+    {
+      id: 'colores', nombre: 'Sistema 5 Colores', para: 'Ordená tu limpieza', lema: 'Un color para cada zona', color: 'tinta',
+      precio: 990, porSeparado: 1125,
+      desc: 'Un color por zona: nadie limpia la cocina con el paño del baño. Trae 5 productos de 1 L y 5 microfibras.',
+      items: [['Inodoros', 'Limpiador desinfectante', 'rojo'], ['Resto del baño', 'Desodorante bactericida', 'naranja'], ['Cocina', 'Desengrasante', 'amarillo'], ['Mesas y general', 'Multiuso', 'verde'], ['Vidrios y espejos', 'Limpiavidrios', 'azul']],
+      incluye: '5 botellas de 1 L (limpiador desinfectante, desodorante bactericida, desengrasante, multiuso y limpiavidrios), 5 microfibras y cartel'
     },
     {
       id: 'gondola', nombre: 'Kit Góndola', para: 'Para almacenes y kioscos', lema: 'Doña Sol en tu estante', color: 'verde',

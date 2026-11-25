@@ -716,6 +716,20 @@ main { overflow-x: clip; }
 /* Los cinco colores del Sistema 5 Colores */
 .kit__stripe { display: flex; height: 8px; }
 .kit__stripe i { flex: 1; }
+.kit__stripe i[class] { background: var(--kc); }
+
+/* Combo: dos kits juntos, a todo el ancho */
+.kit--combo { grid-column: 1 / -1; }
+.kit__combo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 36px; }
+.kit__combo-name {
+  display: inline-block; margin-bottom: 4px; padding: 5px 12px; border-radius: 999px;
+  background: var(--kc); color: var(--kc-fg);
+  font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+}
+@media (min-width: 861px) {
+  .kit--combo .kit__foot { grid-template-columns: auto minmax(0, 1fr) minmax(260px, 340px); align-items: center; column-gap: 20px; }
+  .kit--combo .kit__deal { padding-top: 0; border-top: 0; }
+}
 
 .kit__body { padding: 22px 28px 4px; display: grid; gap: 16px; align-content: start; }
 .kit__desc { color: var(--ink-2); font-size: .95rem; }
@@ -1333,6 +1347,7 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .kit__list li { align-items: flex-start; }
   .kit__list li::before { margin-top: .5em; }
   .kit__list li.is-zone::before { margin-top: .2em; }
+  .kit__combo { grid-template-columns: 1fr; }
   .kit__counts { gap: 6px; }
   .kit__counts li { padding: 12px 4px 10px; }
   .kit__counts b { font-size: 1.9rem; }

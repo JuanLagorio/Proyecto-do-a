@@ -32,9 +32,16 @@
 
   /* Kits de a litro: precio fijo, puesto en productos.js (esos tamaños no están en el panel) */
   const kitById = Object.fromEntries((D.kits || []).map(k => [k.id, k]));
+  const comboKits = k => (k.combo || []).map(id => kitById[id]).filter(Boolean);
   const kitPrice = k => isNum(k.precio) ? k.precio : null;
-  const kitSum = k => isNum(k.porSeparado) ? k.porSeparado : null;
-  const kitText = k => k.incluye || (k.items || []).map(i => Array.isArray(i) ? i[1] : i).join(', ');
+  const kitSum = k => {
+    if (isNum(k.porSeparado)) return k.porSeparado;
+    const subs = comboKits(k);
+    return subs.length && subs.every(s => isNum(s.porSeparado)) ? subs.reduce((a, s) => a + s.porSeparado, 0) : null;
+  };
+  const kitText = k => k.incluye
+    || (k.combo ? comboKits(k).map(s => `${s.nombre}: ${kitText(s)}`).join(' + ')
+      : (k.items || []).map(i => Array.isArray(i) ? i[1] : i).join(', '));
 
   const store = {
     get(k, fb) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch (e) { return fb; } },
@@ -619,13 +626,22 @@
   /* ─── Kits de a litro ────────────────────────────────────────── */
   const kitsGrid = $('#kitsGrid');
   const KIT_LABEL = 'Encargar este kit';
+  const kitLabel = k => k.combo ? 'Encargar los dos' : KIT_LABEL;
   const ZONA = { rojo: 'var(--red)', naranja: 'var(--orange)', amarillo: 'var(--sun)', verde: 'var(--zona-verde)', azul: 'var(--zona-azul)' };
 
-  const kitContentHTML = k => k.cantidades
-    ? `<ul class="kit__counts">${k.cantidades.map(([n, nom]) => `<li><b>${n}</b><span>${esc(nom)}</span></li>`).join('')}</ul>`
-    : `<ul class="kit__list">${(k.items || []).map(it => Array.isArray(it)
+  const kitListHTML = items => `<ul class="kit__list">${items.map(it => Array.isArray(it)
         ? `<li class="is-zone" style="--zone:${ZONA[it[2]] || 'var(--line)'}"><span>${esc(it[0])}</span><span>${esc(it[1])}</span></li>`
         : `<li><span>${esc(it)} <small>1 L</small></span></li>`).join('')}</ul>`;
+
+  const kitContentHTML = k => k.combo
+    ? `<div class="kit__combo">${comboKits(k).map(s => `
+            <div class="kc-${esc(s.color || 'rojo')}">
+              <p class="kit__combo-name">${esc(s.nombre)}</p>
+              ${kitListHTML(s.items || [])}
+            </div>`).join('')}</div>`
+    : k.cantidades
+      ? `<ul class="kit__counts">${k.cantidades.map(([n, nom]) => `<li><b>${n}</b><span>${esc(nom)}</span></li>`).join('')}</ul>`
+      : kitListHTML(k.items || []);
 
   function kitDealHTML(k) {
     const sum = kitSum(k);
@@ -634,8 +650,11 @@
 
   kitsGrid.innerHTML = (D.kits || []).map(k => {
     const zonas = (k.items || []).filter(Array.isArray).map(i => i[2]).filter(Boolean);
+    const franja = k.combo
+      ? comboKits(k).map(s => `<i class="kc-${esc(s.color || 'rojo')}"></i>`)
+      : zonas.map(z => `<i style="background:${ZONA[z]}"></i>`);
     return `
-      <article class="kit kc-${esc(k.color || 'rojo')}" data-kit="${esc(k.id)}" data-reveal>
+      <article class="kit kc-${esc(k.color || 'rojo')}${k.combo ? ' kit--combo' : ''}" data-kit="${esc(k.id)}" data-reveal>
         <header class="kit__head">
           <p class="kit__para">${esc(k.para)}</p>
           <h3 class="kit__name">${esc(k.nombre)}</h3>
@@ -645,7 +664,7 @@
             <span><small>${esc(k.sello || 'Precio')}</small><b>${money(k.precio)}</b></span>
           </p>
         </header>
-        ${zonas.length ? `<div class="kit__stripe" aria-hidden="true">${zonas.map(z => `<i style="background:${ZONA[z]}"></i>`).join('')}</div>` : ''}
+        ${franja.length ? `<div class="kit__stripe" aria-hidden="true">${franja.join('')}</div>` : ''}
         <div class="kit__body">
           ${k.desc ? `<p class="kit__desc">${esc(k.desc)}</p>` : ''}
           ${kitContentHTML(k)}
@@ -654,7 +673,7 @@
         <footer class="kit__foot">
           ${kitDealHTML(k)}
           <p class="kit__how">${ICON('i-pin')} Por encargue o comprándolo en la fábrica</p>
-          <div class="buy">${buyHTML(0, KIT_LABEL)}</div>
+          <div class="buy">${buyHTML(0, kitLabel(k))}</div>
         </footer>
       </article>`;
   }).join('');
@@ -671,7 +690,7 @@
 
   const syncKits = () => $$('.kit', kitsGrid).forEach(el => {
     const q = lineQty({ kit: el.dataset.kit });
-    updateBuy($('.buy', el), q, KIT_LABEL);
+    updateBuy($('.buy', el), q, kitLabel(kitById[el.dataset.kit]));
     el.classList.toggle('in-cart', q > 0);
   });
 
