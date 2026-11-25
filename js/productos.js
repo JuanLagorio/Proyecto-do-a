@@ -315,17 +315,17 @@ window.DONASOL = {
      · color       → rojo, tinta, sol o verde (la cabeza de la tarjeta)
      · sello       → texto chico arriba del precio, en el sello ("Precio")
      · precio      → lo que sale el kit; porSeparado → opcional, se tacha
+     · desc        → opcional, texto debajo de la cabeza
      · items       → 'producto' o [zona, producto, color de la zona]
      · cantidades  → en vez de items: [[cuántas, producto], …]
      · nota        → recuadro opcional { titulo, texto }
      · incluye     → cómo se lee el kit en el pedido de WhatsApp */
   kits: [
     {
-      id: 'prueba', nombre: 'Kit Prueba', para: 'Para comercios o hogares', lema: 'Probá la fábrica', color: 'rojo',
-      precio: 590, porSeparado: 795,
-      desc: 'Cinco productos de 1 L para probar en tu comercio o hogar. Si después pedís $ 2.000 o más con reparto, te lo descontamos.',
-      items: ['Detergente', 'Lavandina', 'Desengrasante', 'Multiuso', 'Jabón de manos'],
-      incluye: 'detergente, lavandina, desengrasante, multiuso y jabón de manos (1 L c/u)'
+      id: 'cocina', nombre: 'Kit Cocina', para: 'Para la cocina', lema: 'Cuatro productos de 1 L', color: 'rojo',
+      precio: 450, porSeparado: 546,
+      items: ['Detergente', 'Desengrasante', 'Multiuso', 'Lavandina'],
+      incluye: 'detergente, desengrasante, multiuso y lavandina (1 L c/u)'
     },
     {
       id: 'colores', nombre: 'Sistema 5 Colores', para: 'Ordená tu limpieza', lema: 'Un color para cada zona', color: 'tinta',
@@ -335,11 +335,10 @@ window.DONASOL = {
       incluye: '5 botellas de 1 L (limpiador desinfectante, desodorante bactericida, desengrasante, multiuso y limpiavidrios), 5 microfibras y cartel'
     },
     {
-      id: 'casa', nombre: 'Llevate uno para casa', para: 'Con tu compra', lema: '¿Y para tu casa?', color: 'sol',
-      precio: 590, porSeparado: 635,
-      desc: 'Lo de tu casa a precio de fábrica: detergente, Ideal Dúo, multiuso, lavandina y desodorante.',
-      items: ['Detergente', 'Ideal Dúo', 'Multiuso', 'Lavandina', 'Desodorante bactericida'],
-      incluye: 'detergente, Ideal Dúo, multiuso, lavandina y desodorante bactericida (1 L c/u)'
+      id: 'bano-ropa', nombre: 'Kit Baño y Ropa', para: 'Para el baño y la ropa', lema: 'Cuatro productos de 1 L', color: 'sol',
+      precio: 590, porSeparado: 706,
+      items: ['Jabón de manos', 'Limpiador desinfectante', 'Desodorante bactericida', 'Ideal Dúo'],
+      incluye: 'jabón de manos, limpiador desinfectante, desodorante bactericida e Ideal Dúo (1 L c/u)'
     },
     {
       id: 'gondola', nombre: 'Kit Góndola', para: 'Para almacenes y kioscos', lema: 'Doña Sol en tu estante', color: 'verde',

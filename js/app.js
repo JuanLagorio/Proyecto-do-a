@@ -647,7 +647,7 @@
         </header>
         ${zonas.length ? `<div class="kit__stripe" aria-hidden="true">${zonas.map(z => `<i style="background:${ZONA[z]}"></i>`).join('')}</div>` : ''}
         <div class="kit__body">
-          <p class="kit__desc">${esc(k.desc)}</p>
+          ${k.desc ? `<p class="kit__desc">${esc(k.desc)}</p>` : ''}
           ${kitContentHTML(k)}
           ${k.nota ? `<p class="kit__note"><b>${esc(k.nota.titulo)}:</b> ${esc(k.nota.texto)}</p>` : ''}
         </div>
