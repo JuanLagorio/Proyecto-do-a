@@ -324,6 +324,7 @@ window.DONASOL = {
     {
       id: 'cocina', nombre: 'Kit Cocina', para: 'Para la cocina', lema: 'Cuatro productos de 1 L', color: 'rojo',
       precio: 450, porSeparado: 546,
+      desc: 'De la vajilla a la campana, todo brillando: detergente para los platos, desengrasante para hornos y campanas, multiuso para mesadas y pisos, y lavandina para desinfectar.',
       items: ['Detergente', 'Desengrasante', 'Multiuso', 'Lavandina'],
       incluye: 'detergente, desengrasante, multiuso y lavandina (1 L c/u)'
     },
@@ -337,6 +338,7 @@ window.DONASOL = {
     {
       id: 'bano-ropa', nombre: 'Kit Baño y Ropa', para: 'Para el baño y la ropa', lema: 'Cuatro productos de 1 L', color: 'sol',
       precio: 590, porSeparado: 706,
+      desc: 'Baño desinfectado y perfumado, y ropa limpia en un solo kit: jabón que cuida tus manos, limpiador desinfectante, desodorante bactericida e Ideal Dúo, que lava y suaviza a la vez.',
       items: ['Jabón de manos', 'Limpiador desinfectante', 'Desodorante bactericida', 'Ideal Dúo'],
       incluye: 'jabón de manos, limpiador desinfectante, desodorante bactericida e Ideal Dúo (1 L c/u)'
     },
