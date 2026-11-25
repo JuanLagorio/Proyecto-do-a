@@ -742,14 +742,6 @@ main { overflow-x: clip; }
 .kit__foot { margin-top: auto; padding: 16px 28px 26px; display: grid; gap: 14px; }
 .kit__deal { padding-top: 14px; border-top: 2px solid var(--ink); font-size: .9rem; font-weight: 600; color: var(--muted); }
 .kit__deal s { margin-left: 4px; font-weight: 800; color: var(--ink-2); }
-/* Kit para almacenes: cuánto paga, a cuánto lo revende y cuánto gana */
-.kit__resale { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
-.kit__resale div { padding: 14px 14px 12px; border-radius: 14px; background: var(--cream); border: 1.5px solid var(--line); }
-.kit__resale dt { font-size: .66rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-.kit__resale dd { margin: 6px 0 0; font-family: var(--f-display); font-weight: 900; font-size: 1.45rem; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
-.kit__resale .is-win { background: #E2F1E5; border-color: #BFDCC6; }
-.kit__resale .is-win dt { color: var(--kit-verde); }
-.kit__resale .is-win dd { color: var(--kit-verde); }
 .kit__how {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 10px 14px; border-radius: 14px; background: var(--cream); border: 1.5px dashed #D9C3A0;
@@ -1345,10 +1337,6 @@ html:has(dialog[open]) body > :not(dialog) *::after { animation-play-state: paus
   .kit__counts li { padding: 12px 4px 10px; }
   .kit__counts b { font-size: 1.9rem; }
   .kit__counts span { font-size: .72rem; }
-  .kit__resale { gap: 6px; }
-  .kit__resale div { padding: 10px 8px; }
-  .kit__resale dt { font-size: .56rem; letter-spacing: .06em; }
-  .kit__resale dd { font-size: 1.1rem; }
   .refill { padding: 22px 20px; gap: 14px 16px; align-items: start; }
   .refill__icon { width: 56px; height: 56px; }
   .refill__icon svg { width: 28px; height: 28px; }

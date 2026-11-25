@@ -317,7 +317,6 @@ window.DONASOL = {
      · precio      → lo que sale el kit; porSeparado → opcional, se tacha
      · items       → [producto, envase] o [zona, producto, color de la zona]
      · cantidades  → en vez de items: [[cuántas, producto], …]
-     · reventa     → opcional, precio sugerido de reventa (kit para almacenes)
      · nota        → recuadro opcional { titulo, texto }
      · incluye     → cómo se lee el kit en el pedido de WhatsApp */
   kits: [
@@ -344,7 +343,7 @@ window.DONASOL = {
     },
     {
       id: 'gondola', nombre: 'Kit Góndola', para: 'Para almacenes y kioscos', lema: 'Doña Sol en tu estante', color: 'verde',
-      sello: 'La caja', precio: 1010, reventa: 1388,
+      sello: 'La caja', precio: 1010,
       desc: 'Doce botellas de 1 L. Siempre en envase Doña Sol.',
       cantidades: [[4, 'Lavandina'], [4, 'Shampoo'], [2, 'Ideal Dúo'], [2, 'Multiuso']],
       incluye: '4 lavandina, 4 shampoo, 2 Ideal Dúo y 2 multiuso (1 L c/u) con exhibidor'

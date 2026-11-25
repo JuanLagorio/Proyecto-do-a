@@ -628,13 +628,6 @@
         : `<li><span>${esc(a)} <small>1 L</small></span><span>${esc(b)}</span></li>`).join('')}</ul>`;
 
   function kitDealHTML(k) {
-    if (isNum(k.reventa) && k.reventa > k.precio) {
-      return `<dl class="kit__resale">
-            <div><dt>Pagás la caja</dt><dd>${money(k.precio)}</dd></div>
-            <div><dt>La revendés a</dt><dd>${money(k.reventa)}</dd></div>
-            <div class="is-win"><dt>Ganás por caja</dt><dd>${money(k.reventa - k.precio)}</dd></div>
-          </dl>`;
-    }
     const sum = kitSum(k);
     return isNum(sum) && sum > k.precio ? `<p class="kit__deal">Por separado <s>${money(sum)}</s></p>` : '';
   }
