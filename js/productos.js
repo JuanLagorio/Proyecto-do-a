@@ -324,28 +324,28 @@ window.DONASOL = {
     {
       id: 'prueba', nombre: 'Kit Prueba', para: 'Para comercios', lema: 'Probá la fábrica', color: 'rojo',
       precio: 590, porSeparado: 795,
-      desc: 'Cinco productos para probar en tu propio local sin comprar cinco bidones.',
+      desc: 'Cinco productos de 1 L para probar en tu comercio o hogar. Si después pedís $ 2.000 o más con reparto, te lo descontamos.',
       items: [['Shampoo industrial', 'Gotita'], ['Lavandina', 'Bidón'], ['Desengrasante', 'Con gatillo'], ['Multiuso', 'Gotita'], ['Shampoo para manos', 'Con válvula']],
       incluye: 'shampoo industrial, lavandina, desengrasante, multiuso y shampoo para manos (1 L c/u)'
     },
     {
       id: 'colores', nombre: 'Sistema 5 Colores', para: 'Ordená tu limpieza', lema: 'Un color para cada zona', color: 'tinta',
       precio: 990, porSeparado: 1125,
-      desc: 'Cinco botellas de 1 L, cinco microfibras del mismo color y un cartel para la pared. Lo comprás una vez y después rellenás las botellas con nuestros bidones.',
+      desc: 'Un color por zona: nadie limpia la cocina con el paño del baño. Trae 5 productos de 1 L y 5 microfibras.',
       items: [['Inodoros', 'Limpiador desinfectante', 'rojo'], ['Resto del baño', 'Desodorante bactericida', 'naranja'], ['Cocina', 'Desengrasante · con gatillo', 'amarillo'], ['Mesas y general', 'Multiuso', 'verde'], ['Vidrios y espejos', 'Limpiavidrios · con gatillo', 'azul']],
       incluye: '5 botellas de 1 L (limpiador desinfectante, desodorante bactericida, desengrasante, multiuso y limpiavidrios), 5 microfibras y cartel'
     },
     {
       id: 'casa', nombre: 'Llevate uno para casa', para: 'Con tu compra', lema: '¿Y para tu casa?', color: 'sol',
       precio: 590, porSeparado: 635,
-      desc: 'Cinco botellas de 1 L para la limpieza de tu casa, junto con la compra para tu comercio.',
+      desc: 'Lo de tu casa a precio de fábrica: shampoo, Ideal Dúo, multiuso, lavandina y desodorante.',
       items: [['Shampoo', 'Gotita'], ['Ideal Dúo', 'Gotita'], ['Multiuso', 'Gotita'], ['Lavandina', 'Bidón'], ['Desodorante bactericida', 'Gotita']],
       incluye: 'shampoo, Ideal Dúo, multiuso, lavandina y desodorante bactericida (1 L c/u)'
     },
     {
       id: 'gondola', nombre: 'Kit Góndola', para: 'Para almacenes y kioscos', lema: 'Doña Sol en tu estante', color: 'verde',
       sello: 'La caja', precio: 1010, reventa: 1388,
-      desc: 'Doce botellas de 1 L y un exhibidor de cartón con el precio sugerido, que es el mismo de la fábrica. Siempre en envase Doña Sol.',
+      desc: 'Doce botellas de 1 L. Siempre en envase Doña Sol.',
       cantidades: [[4, 'Lavandina'], [4, 'Shampoo'], [2, 'Ideal Dúo'], [2, 'Multiuso']],
       incluye: '4 lavandina, 4 shampoo, 2 Ideal Dúo y 2 multiuso (1 L c/u) con exhibidor'
     }
