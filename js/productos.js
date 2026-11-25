@@ -324,8 +324,8 @@ window.DONASOL = {
       id: 'prueba', nombre: 'Kit Prueba', para: 'Para comercios', lema: 'Probá la fábrica', color: 'rojo',
       precio: 590, porSeparado: 795,
       desc: 'Cinco productos de 1 L para probar en tu comercio o hogar. Si después pedís $ 2.000 o más con reparto, te lo descontamos.',
-      items: [['Shampoo industrial', 'Gotita'], ['Lavandina', 'Bidón'], ['Desengrasante', 'Con gatillo'], ['Multiuso', 'Gotita'], ['Shampoo para manos', 'Con válvula']],
-      incluye: 'shampoo industrial, lavandina, desengrasante, multiuso y shampoo para manos (1 L c/u)'
+      items: [['Detergente', 'Gotita'], ['Lavandina', 'Bidón'], ['Desengrasante', 'Con gatillo'], ['Multiuso', 'Gotita'], ['Jabón de manos', 'Con válvula']],
+      incluye: 'detergente, lavandina, desengrasante, multiuso y jabón de manos (1 L c/u)'
     },
     {
       id: 'colores', nombre: 'Sistema 5 Colores', para: 'Ordená tu limpieza', lema: 'Un color para cada zona', color: 'tinta',
@@ -337,21 +337,21 @@ window.DONASOL = {
     {
       id: 'casa', nombre: 'Llevate uno para casa', para: 'Con tu compra', lema: '¿Y para tu casa?', color: 'sol',
       precio: 590, porSeparado: 635,
-      desc: 'Lo de tu casa a precio de fábrica: shampoo, Ideal Dúo, multiuso, lavandina y desodorante.',
-      items: [['Shampoo', 'Gotita'], ['Ideal Dúo', 'Gotita'], ['Multiuso', 'Gotita'], ['Lavandina', 'Bidón'], ['Desodorante bactericida', 'Gotita']],
-      incluye: 'shampoo, Ideal Dúo, multiuso, lavandina y desodorante bactericida (1 L c/u)'
+      desc: 'Lo de tu casa a precio de fábrica: detergente, Ideal Dúo, multiuso, lavandina y desodorante.',
+      items: [['Detergente', 'Gotita'], ['Ideal Dúo', 'Gotita'], ['Multiuso', 'Gotita'], ['Lavandina', 'Bidón'], ['Desodorante bactericida', 'Gotita']],
+      incluye: 'detergente, Ideal Dúo, multiuso, lavandina y desodorante bactericida (1 L c/u)'
     },
     {
       id: 'gondola', nombre: 'Kit Góndola', para: 'Para almacenes y kioscos', lema: 'Doña Sol en tu estante', color: 'verde',
       sello: 'La caja', precio: 1010,
       desc: 'Doce botellas de 1 L. Siempre en envase Doña Sol.',
-      cantidades: [[4, 'Lavandina'], [4, 'Shampoo'], [2, 'Ideal Dúo'], [2, 'Multiuso']],
-      incluye: '4 lavandina, 4 shampoo, 2 Ideal Dúo y 2 multiuso (1 L c/u) con exhibidor'
+      cantidades: [[4, 'Lavandina'], [4, 'Detergente'], [2, 'Ideal Dúo'], [2, 'Multiuso']],
+      incluye: '4 lavandina, 4 detergente, 2 Ideal Dúo y 2 multiuso (1 L c/u) con exhibidor'
     }
   ],
 
   /* Recarga: el cliente trae su botella Doña Sol de 1 L al local */
-  recarga: { producto: 'Shampoo 1 L', precio: 69, nueva: 99 },
+  recarga: { producto: 'Detergente 1 L', precio: 69, nueva: 99 },
 
   /* Productos que giran en la portada */
   portada: ['multiuso', 'lavandina', 'limpiavidrios', 'cremoso', 'alcohol-gel', 'desengrasante']
