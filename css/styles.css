@@ -845,7 +845,7 @@ main { overflow-x: clip; }
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
-.logos__track { display: flex; width: max-content; animation: marquee 50s linear infinite; }
+.logos__track { display: flex; width: max-content; animation: marquee 60s linear infinite; }
 /* Solo con mouse: en el celular el toque deja el :hover pegado y la cinta se frena */
 @media (hover: hover) and (pointer: fine) {
   .logos__belt:hover .logos__track { animation-play-state: paused; }
